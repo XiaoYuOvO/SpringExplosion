@@ -10,7 +10,6 @@
   },
   "license": "All-Rights-Reserved",
   "icon": "assets/spring_explosion/icon.png",
-  "accessWidener" : "spring_explosion.accesswidener",
   "environment": "*",
   "entrypoints": {
     "client": [
