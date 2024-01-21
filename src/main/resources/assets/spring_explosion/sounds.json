@@ -1,0 +1,34 @@
+{
+  "item.spring_explosion.spark_sword.on": {
+    "sounds": [
+      {
+        "name": "spring_explosion:spark_sword"
+      }
+    ],
+    "subtitle": "subtitle.spring_explosion.spark_sword_on"
+  },
+  "item.spring_explosion.firework_igniting": {
+    "sounds": [
+      {
+        "name": "spring_explosion:firework_igniting"
+      }
+    ],
+    "subtitle": "subtitle.spring_explosion.firework_igniting"
+  },
+  "item.spring_explosion.gyro_firing": {
+    "sounds": [
+      {
+        "name": "spring_explosion:gyro_firing"
+      }
+    ],
+    "subtitle": "subtitle.spring_explosion.gyro_firing"
+  },
+  "item.spring_explosion.rocket_accelerator": {
+    "sounds": [
+      {
+        "name": "spring_explosion:rocket_accelerator"
+      }
+    ],
+    "subtitle": "subtitle.spring_explosion.rocket_accelerator"
+  }
+}

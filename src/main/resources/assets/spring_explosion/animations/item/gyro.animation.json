@@ -1,0 +1,33 @@
+{
+	"format_version": "1.8.0",
+	"animations": {
+		"animation.gyro.ignite": {
+			"animation_length": 2.54167,
+			"override_previous_animation": true,
+			"bones": {
+				"bone": {
+					"rotation": {
+						"vector": [0, 0, 0]
+					},
+					"position": {
+						"vector": [0, 0, 0]
+					}
+				},
+				"tail": {
+					"position": {
+						"0.0": {
+							"vector": [0, 0, 0]
+						},
+						"2.5": {
+							"vector": [0, 0, -3],
+							"easing": "easeInSine"
+						}
+					}
+				}
+			},
+			"sound_effects": {},
+			"particle_effects": {},
+			"timeline": {}
+		}
+	}
+}
