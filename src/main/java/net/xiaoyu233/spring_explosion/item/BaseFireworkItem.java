@@ -3,6 +3,7 @@ package net.xiaoyu233.spring_explosion.item;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -13,13 +14,14 @@ import net.xiaoyu233.spring_explosion.components.items.FireworkItemBaseComponent
 import net.xiaoyu233.spring_explosion.components.items.SEItemComponents;
 import net.xiaoyu233.spring_explosion.entity.BaseFireworkEntity;
 import net.xiaoyu233.spring_explosion.fireworks.BaseFirework;
+import net.xiaoyu233.spring_explosion.fireworks.FireworkItemToEntityAction;
 import net.xiaoyu233.spring_explosion.fireworks.FireworkUsage;
 import net.xiaoyu233.spring_explosion.util.ItemUtil;
 import software.bernie.geckolib.renderer.GeoRenderer;
 
 import java.util.function.Supplier;
 
-public abstract class BaseFireworkItem<F extends BaseFirework<?, I, IR>, I extends BaseFireworkItem<F,I,IR>, IR extends GeoRenderer<I>>  extends DefaultGeoItem<I, IR> implements IFireworkItem<F>{
+public abstract class BaseFireworkItem<F extends BaseFirework<?, I, IR>, I extends BaseFireworkItem<F,I,IR>, IR extends GeoRenderer<I>>  extends DefaultGeoItem<I, IR> implements IFireworkItem<F>, IDropUseItem{
     private final F firework;
     public BaseFireworkItem(F firework, Settings settings) {
         super(settings);
@@ -36,16 +38,24 @@ public abstract class BaseFireworkItem<F extends BaseFirework<?, I, IR>, I exten
         return this.firework;
     }
 
-    public void createAndThrowFirework(World world,ItemStack stack, LivingEntity user, boolean drop){
+    public void createAndThrowFirework(World world, ItemStack stack, LivingEntity user, FireworkItemToEntityAction action){
         BaseFireworkEntity<?, ?> fireworkEntity = this.firework.createEntity(world, stack, user);
         world.spawnEntity(fireworkEntity);
-        if (drop) {
-            firework.getDropAction().apply(fireworkEntity, user);
-        }else {
-            firework.getOffhandAction().apply(fireworkEntity, user);
-        }
+        action.apply(fireworkEntity, user);
     }
 
+    @Override
+    public ItemEntity useOnDrop(World world, ItemStack stack, LivingEntity user) {
+        BaseFireworkEntity<?, ?> fusingEntity = this.getFirework().createEntity(world, stack, user);
+        world.spawnEntity(fusingEntity);
+        this.getFirework().getDropAction().apply(fusingEntity, user);
+        return null;
+    }
+
+    @Override
+    public boolean canUseOnDrop(ItemStack stack) {
+        return SEItemComponents.FIREWORK_ITEM_BASE.get(stack).isUsed();
+    }
 
     @Override
     //@Environment(EnvType.CLIENT, EnvType.SERVER)
@@ -64,8 +74,11 @@ public abstract class BaseFireworkItem<F extends BaseFirework<?, I, IR>, I exten
                         fireworkItemBaseComponent.setFusing(false);
                         fireworkItemBaseComponent.setFiring(true);
                     }
-                }else if (fuseUsage == FireworkUsage.ENTITY || !selected){
-                    createAndThrowFirework(world, stack, livingEntity, true);
+                }else if (fuseUsage == FireworkUsage.ENTITY){
+                    createAndThrowFirework(world, stack, livingEntity, firework.getDropAction());
+                    stack.decrement(1);
+                }else if (!selected){
+                    createAndThrowFirework(world, stack, livingEntity, firework.getOffhandAction());
                     stack.decrement(1);
                 }else {
                     fireworkItemBaseComponent.setFusing(false);
@@ -80,9 +93,9 @@ public abstract class BaseFireworkItem<F extends BaseFirework<?, I, IR>, I exten
                     }
                 }else {
                     if (fireUsage == FireworkUsage.ENTITY) {
-                        createAndThrowFirework(world, stack, livingEntity, true);
+                        createAndThrowFirework(world, stack, livingEntity, firework.getFusingToEntityFiringAction());
                     } else if (fireUsage == FireworkUsage.BOTH && !selected) {
-                        createAndThrowFirework(world, stack, livingEntity, false);
+                        createAndThrowFirework(world, stack, livingEntity, firework.getOffhandAction());
                     }
                     stack.decrement(1);
                 }

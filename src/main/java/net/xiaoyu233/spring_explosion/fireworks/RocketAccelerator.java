@@ -3,7 +3,6 @@ package net.xiaoyu233.spring_explosion.fireworks;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.fluid.Fluids;
 import net.minecraft.item.ItemStack;
 import net.minecraft.registry.tag.FluidTags;
 import net.minecraft.sound.SoundEvents;
@@ -12,6 +11,7 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.xiaoyu233.spring_explosion.client.render.item.RocketAcceleratorItemRenderer;
 import net.xiaoyu233.spring_explosion.client.sound.SESoundEvents;
+import net.xiaoyu233.spring_explosion.entity.BaseFireworkEntity;
 import net.xiaoyu233.spring_explosion.entity.RocketAcceleratorEntity;
 import net.xiaoyu233.spring_explosion.entity.SEEntityTypes;
 import net.xiaoyu233.spring_explosion.item.RocketAcceleratorItem;
@@ -93,8 +93,8 @@ public class RocketAccelerator extends BaseFirework<RocketAcceleratorEntity, Roc
     }
 
     @Override
-    public FireworkItemToEntityAction getOffhandAction() {
-        return FireworkItemToEntityAction.DROP_COPY_YAW;
+    public FireworkItemToEntityAction<BaseFireworkEntity<?, ?>> getOffhandAction() {
+        return FireworkItemToEntityAction.offhandCopyYaw();
     }
 
     @Override

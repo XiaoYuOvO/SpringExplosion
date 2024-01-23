@@ -2,6 +2,8 @@ package net.xiaoyu233.spring_explosion.fireworks;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.render.entity.model.BipedEntityModel;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -14,11 +16,9 @@ import net.xiaoyu233.spring_explosion.client.sound.SESoundEvents;
 import net.xiaoyu233.spring_explosion.components.items.FireworkItemBaseComponent;
 import net.xiaoyu233.spring_explosion.components.items.SEItemComponents;
 import net.xiaoyu233.spring_explosion.entity.BaseFireworkEntity;
-import net.xiaoyu233.spring_explosion.item.DefaultGeoItem;
 import net.xiaoyu233.spring_explosion.item.IFireworkItem;
 import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.core.animatable.GeoAnimatable;
-import software.bernie.geckolib.renderer.GeoItemRenderer;
 import software.bernie.geckolib.renderer.GeoRenderer;
 
 import java.util.function.Supplier;
@@ -72,10 +72,23 @@ public abstract class BaseFirework<E extends BaseFireworkEntity<E, ?>, I extends
     @NotNull
     public abstract FireworkUsage getFireUsage();
 
-    public FireworkItemToEntityAction getOffhandAction(){
-        return FireworkItemToEntityAction.DROP;
+    public FireworkItemToEntityAction<BaseFireworkEntity<?, ?>> getOffhandAction(){
+        return FireworkItemToEntityAction.offhand();
     }
-    public FireworkItemToEntityAction getDropAction(){
-        return FireworkItemToEntityAction.THROW;
+    public FireworkItemToEntityAction<BaseFireworkEntity<?,?>> getDropAction(){
+        return FireworkItemToEntityAction.drop();
     }
+
+    public FireworkItemToEntityAction<BaseFireworkEntity<?, ?>> getFusingToEntityFiringAction(){
+        return getDropAction();
+    }
+
+    @Environment(EnvType.CLIENT)
+    public BipedEntityModel.ArmPose getArmPose(){
+        return BipedEntityModel.ArmPose.ITEM;
+    }
+
+    public void onEntityStopFiring(E e) {}
+
+    public void onEntityStartFiring(E e) {}
 }

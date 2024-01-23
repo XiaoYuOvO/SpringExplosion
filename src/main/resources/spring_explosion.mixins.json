@@ -4,6 +4,7 @@
   "package": "net.xiaoyu233.spring_explosion.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
+    "ExplosionMixin",
     "ItemStackMixin",
     "PlayerEntityMixin"
   ],

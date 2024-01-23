@@ -32,7 +32,8 @@
   },
   "custom": {
     "cardinal-components": [
-      "spring_explosion:firework_item_base"
+      "spring_explosion:firework_item_base",
+      "spring_explosion:firework_mine_controller"
     ]
   }
 }

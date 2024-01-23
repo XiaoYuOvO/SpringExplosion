@@ -8,5 +8,7 @@ public class EntityRenderers {
         EntityRendererRegistry.register(SEEntityTypes.SPARK_SWORD, SparkSwordRenderer::new);
         EntityRendererRegistry.register(SEEntityTypes.GYRO, GyroRenderer::new);
         EntityRendererRegistry.register(SEEntityTypes.ROCKET_ACCELERATOR, RocketAcceleratorRenderer::new);
+        EntityRendererRegistry.register(SEEntityTypes.FIREWORK_MORTAR, FireworkMortarRenderer::new);
+        EntityRendererRegistry.register(SEEntityTypes.FIREWORK_MINE, MineRenderer::new);
     }
 }

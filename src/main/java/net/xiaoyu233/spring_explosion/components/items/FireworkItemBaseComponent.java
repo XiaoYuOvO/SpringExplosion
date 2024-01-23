@@ -4,8 +4,8 @@ import dev.onyxstudios.cca.api.v3.item.ItemComponent;
 import net.minecraft.item.ItemStack;
 
 public class FireworkItemBaseComponent extends ItemComponent {
-    private static final String FUSING_KEY = "fusing";
-    private static final String FIRING_KEY = "firing";
+    private static final String FUSING_KEY = "Fusing";
+    private static final String FIRING_KEY = "Firing";
     public boolean isFusing() {
         if (!this.hasTag(FUSING_KEY)) this.putBoolean(FUSING_KEY, false);
         return getBoolean(FUSING_KEY);

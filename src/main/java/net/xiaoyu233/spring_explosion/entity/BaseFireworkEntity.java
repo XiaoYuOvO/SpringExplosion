@@ -7,11 +7,14 @@ import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.network.listener.ClientPlayPacketListener;
+import net.minecraft.network.packet.Packet;
+import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import net.xiaoyu233.spring_explosion.client.sound.SESoundEvents;
 import net.xiaoyu233.spring_explosion.fireworks.BaseFirework;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
@@ -20,14 +23,9 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.UUID;
 
-public abstract class BaseFireworkEntity<E extends BaseFireworkEntity<E,?>, F extends BaseFirework<E,?,?>> extends Entity implements GeoEntity {
+public abstract class BaseFireworkEntity<E extends BaseFireworkEntity<E,?>, F extends BaseFirework<E,?,?>> extends OwnedGeoEntity {
     private static final TrackedData<Integer> DURATION_REMAIN = DataTracker.registerData(BaseFireworkEntity.class, TrackedDataHandlerRegistry.INTEGER);
     private static final TrackedData<Integer> FUSE_REMAIN = DataTracker.registerData(BaseFireworkEntity.class, TrackedDataHandlerRegistry.INTEGER);
-    private final AnimatableInstanceCache geoCache = GeckoLibUtil.createInstanceCache(this);
-    @Nullable
-    private Entity owner = null;
-    @Nullable
-    private UUID ownerUuid = null;
 
     public BaseFireworkEntity(EntityType<?> entityType, World world) {
         super(entityType, world);
@@ -71,30 +69,50 @@ public abstract class BaseFireworkEntity<E extends BaseFireworkEntity<E,?>, F ex
             this.getFirework().onEntityFusing((E) this);
         }else {
             int durationRemain = this.getDurationRemain();
+            if (fuseRemain == 0 && durationRemain == this.getFirework().getFiringTime()){
+                this.getFirework().onEntityStartFiring((E) this);
+            }
             if (durationRemain > 0) {
                 this.setDurationRemain(durationRemain - 1);
 //            if (!this.getWorld().isClient) {
                 this.getFirework().onEntityFiring((E) this);
 //            }
             } else {
+                this.getFirework().onEntityStopFiring((E) this);
                 this.discard();
             }
         }
         if (!this.getWorld().isClient){
-            double d;
             if (!this.hasNoGravity()) {
-                d = this.isTouchingWater() ? -0.005 : -0.04;
-                this.setVelocity(this.getVelocity().add(0.0, d, 0.0));
+                this.setVelocity(this.getVelocity().add(0.0, -this.getGravity(), 0.0));
             }
             if (this.isOnGround()) {
                 this.setVelocity(this.getVelocity().multiply(0.5));
             }
 
-            this.move(MovementType.SELF, this.getVelocity());
+            if (this.shouldSelfMove()) {
+                this.move(MovementType.SELF, this.getVelocity());
+            }
             if (!this.isOnGround()) {
                 this.setVelocity(this.getVelocity().multiply(0.95));
             }
         }
+    }
+
+    protected boolean shouldSelfMove(){
+        return true;
+    }
+
+    protected double getGravity() {
+        return this.isTouchingWater() ? 0.005 : 0.04;
+    }
+
+    public boolean isFusing(){
+        return this.getFuseRemain() > 0;
+    }
+
+    public boolean isFiring(){
+        return this.getFuseRemain() <= 0;
     }
 
     @Override
@@ -108,52 +126,42 @@ public abstract class BaseFireworkEntity<E extends BaseFireworkEntity<E,?>, F ex
     }
 
     @Override
+    public boolean isAttackable() {
+        return false;
+    }
+
+    @Override
     public void pushAwayFrom(Entity entity) {
     }
 
-    public void setOwner(@Nullable Entity owner) {
-        this.owner = owner;
+    public void setVelocity(Entity shooter, float pitch, float yaw, float roll, float speed, float divergence) {
+        float f = -MathHelper.sin(yaw * 0.017453292F) * MathHelper.cos(pitch * 0.017453292F);
+        float g = -MathHelper.sin((pitch + roll) * 0.017453292F);
+        float h = MathHelper.cos(yaw * 0.017453292F) * MathHelper.cos(pitch * 0.017453292F);
+        this.setVelocity(f, g, h, speed, divergence);
+        Vec3d vec3d = shooter.getVelocity();
+        this.setVelocity(this.getVelocity().add(vec3d.x, shooter.isOnGround() ? 0.0 : vec3d.y, vec3d.z));
+    }
+
+    public void setVelocity(double x, double y, double z, float speed, float divergence) {
+        Vec3d vec3d = (new Vec3d(x, y, z)).normalize().add(this.random.nextTriangular(0.0, 0.0172275 * (double)divergence), this.random.nextTriangular(0.0, 0.0172275 * (double)divergence), this.random.nextTriangular(0.0, 0.0172275 * (double)divergence)).multiply(speed);
+        this.setVelocity(vec3d);
+        double d = vec3d.horizontalLength();
+        this.setYaw((float)(MathHelper.atan2(vec3d.x, vec3d.z) * 57.2957763671875));
+        this.setPitch((float)(MathHelper.atan2(vec3d.y, d) * 57.2957763671875));
+        this.prevYaw = this.getYaw();
+        this.prevPitch = this.getPitch();
     }
 
     @Override
     protected void readCustomDataFromNbt(NbtCompound nbt) {
-        if (nbt.contains("Owner")) {
-            ownerUuid = nbt.getUuid("Owner");
-        }
         this.setDurationRemain(nbt.getInt("DurationRemain"));
         this.setFuseRemain(nbt.getInt("FuseRemain"));
     }
 
     @Override
     protected void writeCustomDataToNbt(NbtCompound nbt) {
-        if (this.owner != null) {
-            nbt.putUuid("Owner", owner.getUuid());
-        }else if (this.ownerUuid != null) {
-            nbt.putUuid("Owner", ownerUuid);
-        }
         nbt.putInt("DurationRemain", this.getDurationRemain());
         nbt.putInt("FuseRemain", this.getFuseRemain());
-    }
-
-    @Nullable
-    public Entity getOwner() {
-        if (this.owner != null && !this.owner.isRemoved()) {
-            return this.owner;
-        } else if (this.ownerUuid != null && this.getWorld() instanceof ServerWorld) {
-            this.owner = ((ServerWorld)this.getWorld()).getEntity(this.ownerUuid);
-            return this.owner;
-        } else {
-            return null;
-        }
-    }
-
-    @Override
-    public void registerControllers(AnimatableManager.ControllerRegistrar controllerRegistrar) {
-
-    }
-
-    @Override
-    public AnimatableInstanceCache getAnimatableInstanceCache() {
-        return geoCache;
     }
 }

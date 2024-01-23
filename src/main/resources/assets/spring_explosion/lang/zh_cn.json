@@ -2,11 +2,17 @@
   "item.spring_explosion.spark_sword": "烟花火剑",
   "item.spring_explosion.gyro": "旋转蝴蝶",
   "item.spring_explosion.rocket_accelerator" : "烟花推进器",
+  "item.spring_explosion.firework_mortar" : "烟花迫击炮",
+  "item.spring_explosion.firework_mine" : "烟花地雷",
+  "item.spring_explosion.firework_mine_controller" : "烟花地雷控制器",
   "entity.spring_explosion.spark_sword": "烟花火剑",
   "entity.spring_explosion.gyro": "旋转蝴蝶",
   "entity.spring_explosion.rocket_accelerator" : "烟花推进器",
+  "entity.spring_explosion.firework_mortar" : "烟花迫击炮",
+  "entity.spring_explosion.firework_mine" : "烟花地雷",
   "subtitle.spring_explosion.spark_sword_on": "烟花火剑 : 迸发",
   "subtitle.spring_explosion.firework_igniting": "烟火引信 : 点燃",
   "subtitle.spring_explosion.gyro_firing": "旋转蝴蝶 : 燃放",
-  "subtitle.spring_explosion.rocket_accelerator": "烟花推进器 : 喷射"
+  "subtitle.spring_explosion.rocket_accelerator": "烟花推进器 : 喷射",
+  "subtitle.spring_explosion.firework_mortar_launch": "烟花迫击炮 : 发射"
 }

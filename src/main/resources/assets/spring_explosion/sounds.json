@@ -30,5 +30,13 @@
       }
     ],
     "subtitle": "subtitle.spring_explosion.rocket_accelerator"
+  },
+  "item.spring_explosion.firework_mortar_launch": {
+    "sounds": [
+      {
+        "name": "spring_explosion:firework_mortar_launch"
+      }
+    ],
+    "subtitle": "subtitle.spring_explosion.firework_mortar_launch"
   }
 }

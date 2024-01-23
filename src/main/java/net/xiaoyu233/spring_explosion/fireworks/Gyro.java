@@ -14,6 +14,7 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.xiaoyu233.spring_explosion.client.render.item.GyroItemRenderer;
 import net.xiaoyu233.spring_explosion.client.sound.SESoundEvents;
+import net.xiaoyu233.spring_explosion.entity.BaseFireworkEntity;
 import net.xiaoyu233.spring_explosion.entity.GyroEntity;
 import net.xiaoyu233.spring_explosion.entity.SEEntityTypes;
 import net.xiaoyu233.spring_explosion.item.GyroItem;
@@ -88,13 +89,13 @@ public class Gyro extends BaseFirework<GyroEntity, GyroItem, GyroItemRenderer>{
     }
 
     @Override
-    public FireworkItemToEntityAction getDropAction() {
-        return FireworkItemToEntityAction.THROW_NO_COPY_ROTATION;
+    public FireworkItemToEntityAction<BaseFireworkEntity<?, ?>> getDropAction() {
+        return FireworkItemToEntityAction.dropNoCopyRotation();
     }
 
     @Override
-    public FireworkItemToEntityAction getOffhandAction() {
-        return FireworkItemToEntityAction.DROP_NO_COPY_ROTATION;
+    public FireworkItemToEntityAction<BaseFireworkEntity<?, ?>> getOffhandAction() {
+        return FireworkItemToEntityAction.offhandNoCopyRotation();
     }
 
     @Override

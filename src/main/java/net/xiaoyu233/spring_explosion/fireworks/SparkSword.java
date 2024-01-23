@@ -2,6 +2,7 @@ package net.xiaoyu233.spring_explosion.fireworks;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.render.entity.model.BipedEntityModel;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
@@ -98,5 +99,11 @@ public class SparkSword extends BaseFirework<SparkSwordEntity, SparkSwordItem, S
     @Override
     public @NotNull FireworkUsage getFireUsage() {
         return FireworkUsage.BOTH;
+    }
+
+    @Override
+    @Environment(EnvType.CLIENT)
+    public BipedEntityModel.ArmPose getArmPose() {
+        return BipedEntityModel.ArmPose.BOW_AND_ARROW;
     }
 }

@@ -21,23 +21,21 @@ public class PredicateUtil {
                             blockHitResult.getBlockPos())
                     .isSideSolidFullSquare(world, blockHitResult.getBlockPos(), blockHitResult.getSide()));
             if (!raycastResult) return false;
-            AbstractTeam targetTeam = entity.getScoreboardTeam();
-            if (source != null) {
-                return entity != source && (targetTeam == null || targetTeam != source.getScoreboardTeam());
-            } else return targetTeam == null || targetTeam != attacker.getScoreboardTeam();
+            return canHitEntityWithOwner(source, entity);
         };
     }
 
-
     @NotNull
-    public static Predicate<Entity> getNotSameTeamAsOwnerPredicate(Entity owner) {
-        return entity -> {
-            if (owner != null) {
-                return entity != owner && (owner.getScoreboardTeam() == null || owner.getScoreboardTeam() != entity.getScoreboardTeam());
-            } else {
-                return true;
-            }
-        };
+    public static Predicate<Entity> getNotSameTeamAsOwnerPredicate(@Nullable Entity owner) {
+        return entity -> canHitEntityWithOwner(owner, entity);
+    }
+
+    public static boolean canHitEntityWithOwner(Entity owner, Entity entity) {
+        if (owner != null) {
+            return entity != owner && (owner.getScoreboardTeam() == null || owner.getScoreboardTeam() != entity.getScoreboardTeam());
+        } else {
+            return true;
+        }
     }
 
     public static Predicate<Entity> inDistance(Entity source, double distance){
