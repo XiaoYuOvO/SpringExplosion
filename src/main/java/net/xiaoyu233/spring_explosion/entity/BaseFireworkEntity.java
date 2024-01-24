@@ -7,21 +7,11 @@ import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.network.listener.ClientPlayPacketListener;
-import net.minecraft.network.packet.Packet;
-import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket;
-import net.minecraft.server.world.ServerWorld;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.xiaoyu233.spring_explosion.fireworks.BaseFirework;
-import org.jetbrains.annotations.Nullable;
-import software.bernie.geckolib.animatable.GeoEntity;
-import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.core.animation.AnimatableManager;
-import software.bernie.geckolib.util.GeckoLibUtil;
-
-import java.util.UUID;
 
 public abstract class BaseFireworkEntity<E extends BaseFireworkEntity<E,?>, F extends BaseFirework<E,?,?>> extends OwnedGeoEntity {
     private static final TrackedData<Integer> DURATION_REMAIN = DataTracker.registerData(BaseFireworkEntity.class, TrackedDataHandlerRegistry.INTEGER);
@@ -83,6 +73,11 @@ public abstract class BaseFireworkEntity<E extends BaseFireworkEntity<E,?>, F ex
             }
         }
         if (!this.getWorld().isClient){
+            if (this.isSubmergedInWater()) {
+                this.playSound(SoundEvents.BLOCK_FIRE_EXTINGUISH,1,1);
+                this.playSound(SoundEvents.ENTITY_ITEM_BREAK,1,1);
+                this.discard();
+            }
             if (!this.hasNoGravity()) {
                 this.setVelocity(this.getVelocity().add(0.0, -this.getGravity(), 0.0));
             }

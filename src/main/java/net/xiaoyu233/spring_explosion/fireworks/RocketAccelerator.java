@@ -29,11 +29,6 @@ public class RocketAccelerator extends BaseFirework<RocketAcceleratorEntity, Roc
             if (entity.age % 10 == 0) {
                 entity.playSound(SESoundEvents.ROCKET_ACCELERATOR, 1  * entity.getStrength(), 1);
             }
-            if (entity.isSubmergedInWater()) {
-                entity.playSound(SoundEvents.BLOCK_FIRE_EXTINGUISH,1,1);
-                entity.playSound(SoundEvents.ENTITY_ITEM_BREAK,1,1);
-                entity.discard();
-            }
         }else {
             addVelocityAndSpawnParticle(entity);
         }
