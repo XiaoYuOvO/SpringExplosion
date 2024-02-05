@@ -15,7 +15,7 @@ public abstract class ItemStackMixin {
 
     @Inject(method = "getMaxDamage", at = @At("HEAD"), cancellable = true)
     private void injectGetMaxDamage(CallbackInfoReturnable<Integer> cir){
-        if (this.getItem() instanceof IFireworkItem baseFireworkItem){
+        if (this.getItem() instanceof IFireworkItem<?> baseFireworkItem){
             cir.setReturnValue(baseFireworkItem.getMaxDamage((ItemStack) (Object)this));
             cir.cancel();
         }

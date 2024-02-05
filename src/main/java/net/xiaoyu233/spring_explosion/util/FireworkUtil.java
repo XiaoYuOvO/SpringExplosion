@@ -6,10 +6,12 @@ import net.minecraft.nbt.NbtList;
 import net.minecraft.util.math.random.Random;
 
 public class FireworkUtil {
-    public static NbtCompound randomFirework(Random random) {
+    public static NbtCompound randomFirework(Random random){
+        return randomFirework(random, random.nextInt(3) + 1);
+    }
+    public static NbtCompound randomFirework(Random random, int explosionCount) {
         NbtCompound nbtCompound = new NbtCompound();
         NbtList explosions = new NbtList();
-        int explosionCount = random.nextInt(3) + 1;
         for (int i = 0; i < explosionCount; i++) {
             NbtCompound explosion = new NbtCompound();
             explosion.putInt("Type", random.nextInt(FireworkRocketItem.Type.values().length));

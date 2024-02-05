@@ -12,6 +12,11 @@ public class SESoundEvents {
     public static final SoundEvent FIREWORK_IGNITING = registerSound("item.spring_explosion.firework_igniting");
     public static final SoundEvent ROCKET_ACCELERATOR = registerSound("item.spring_explosion.rocket_accelerator");
     public static final SoundEvent FIREWORK_MORTAR_LAUNCH = registerSound("item.spring_explosion.firework_mortar_launch");
+    public static final SoundEvent OILY_BOMB_EXPLODE = registerSound("item.spring_explosion.oily_bomb_explode");
+    public static final SoundEvent GLOWING_BOMB_EXPLODE = registerSound("item.spring_explosion.glowing_bomb_explode");
+    public static final SoundEvent SMOKE_BOMB_FIRING = registerSound("item.spring_explosion.smoke_bomb_firing");
+    public static final SoundEvent FIRECRACKER_EXPLODE = registerSound("item.spring_explosion.firecrackers_explode");
+    public static final SoundEvent FIREWORK_MACHINE_GUN_FIRE = registerSound("item.spring_explosion.firework_machine_gun_fire");
 
     public static void registerSounds(){
 

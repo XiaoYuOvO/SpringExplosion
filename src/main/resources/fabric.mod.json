@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "spring_explosion",
-  "version": "${version}",
+  "version": "0.1.0",
   "name": "SpringExplosion",
   "description": "",
   "authors": [],
@@ -26,14 +26,15 @@
     "spring_explosion.mixins.json"
   ],
   "depends": {
-    "fabricloader": ">=${loader_version}",
+    "fabricloader": ">=0.15.0",
     "fabric": "*",
-    "minecraft": "${minecraft_version}"
+    "minecraft": "1.20.1"
   },
   "custom": {
     "cardinal-components": [
       "spring_explosion:firework_item_base",
-      "spring_explosion:firework_mine_controller"
+      "spring_explosion:firework_mine_controller",
+      "spring_explosion:firecracker"
     ]
   }
 }

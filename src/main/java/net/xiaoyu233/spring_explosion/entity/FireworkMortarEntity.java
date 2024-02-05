@@ -13,8 +13,8 @@ import net.minecraft.world.explosion.Explosion;
 import net.xiaoyu233.spring_explosion.fireworks.FireworkMortar;
 import net.xiaoyu233.spring_explosion.util.FireworkUtil;
 
-public class FireworkMortarEntity extends ProjectileFireworkEntity<FireworkMortarEntity, FireworkMortar> {
-    private static final byte EXPLODE_STATUS = 64;
+public class FireworkMortarEntity extends ProjectileFireworkEntity<FireworkMortarEntity, FireworkMortar> implements IFireworkEntity {
+
     public FireworkMortarEntity(EntityType<?> entityType, World world) {
         super(entityType, world);
     }
@@ -22,8 +22,13 @@ public class FireworkMortarEntity extends ProjectileFireworkEntity<FireworkMorta
     @Override
     protected void tickAcceleration() {
         if (isFiring()){
-            this.setVelocity(this.getVelocity().add(this.getRotationVec(0).multiply(0.1)));
+            this.setVelocity(this.getVelocity().add(this.getRotationVec(0).multiply(0.2)));
         }
+    }
+
+    @Override
+    public boolean isImmuneToExplosion() {
+        return true;
     }
 
     @Override

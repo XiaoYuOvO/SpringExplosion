@@ -38,5 +38,45 @@
       }
     ],
     "subtitle": "subtitle.spring_explosion.firework_mortar_launch"
+  },
+  "item.spring_explosion.oily_bomb_explode": {
+    "sounds": [
+      {
+        "name": "spring_explosion:oily_bomb_explode"
+      }
+    ],
+    "subtitle": "subtitle.spring_explosion.oily_bomb_explode"
+  },
+  "item.spring_explosion.glowing_bomb_explode": {
+    "sounds": [
+      {
+        "name": "spring_explosion:glowing_bomb_explode"
+      }
+    ],
+    "subtitle": "subtitle.spring_explosion.glowing_bomb_explode"
+  },
+  "item.spring_explosion.smoke_bomb_firing": {
+    "sounds": [
+      {
+        "name": "spring_explosion:smoke_bomb_firing"
+      }
+    ],
+    "subtitle": "subtitle.spring_explosion.smoke_bomb_firing"
+  },
+  "item.spring_explosion.firecrackers_explode": {
+    "sounds": [
+      {
+        "name": "spring_explosion:firecrackers_explode"
+      }
+    ],
+    "subtitle": "subtitle.spring_explosion.firecrackers_explode"
+  },
+  "item.spring_explosion.firework_machine_gun_fire": {
+    "sounds": [
+      {
+        "name": "spring_explosion:firework_machine_gun_fire"
+      }
+    ],
+    "subtitle": "subtitle.spring_explosion.firework_machine_gun_fire"
   }
 }

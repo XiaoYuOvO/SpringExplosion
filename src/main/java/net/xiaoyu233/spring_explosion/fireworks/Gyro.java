@@ -55,8 +55,8 @@ public class Gyro extends BaseFirework<GyroEntity, GyroItem, GyroItemRenderer>{
             }
 
             Vec3d rotationVec = entity.getRotationVec(0.0F);
-            List<Entity> entities = CollisionUtil.collideInConical(entity, rotationVec.negate(), entity.getWorld(), 3.0, 40.0, EntityPredicates.EXCEPT_CREATIVE_OR_SPECTATOR.and(PredicateUtil.getVisibleRangeAttackPredicate(entity.getWorld(), entity, entity.getOwner())));
-            entities.addAll(CollisionUtil.collideInConical(entity, rotationVec, entity.getWorld(), 3.0, 40.0, EntityPredicates.EXCEPT_CREATIVE_OR_SPECTATOR.and(PredicateUtil.getVisibleRangeAttackPredicate(entity.getWorld(), entity, entity.getOwner()))));
+            List<Entity> entities = CollisionUtil.collideInConical(entity, CollisionUtil.PosingMethod.DOWN_CENTER, rotationVec.negate(), entity.getWorld(), 3.0, 40.0, EntityPredicates.EXCEPT_CREATIVE_OR_SPECTATOR.and(PredicateUtil.getVisibleRangeAttackPredicate(entity.getWorld(), entity, entity.getOwner())));
+            entities.addAll(CollisionUtil.collideInConical(entity,CollisionUtil.PosingMethod.DOWN_CENTER, rotationVec, entity.getWorld(), 3.0, 40.0, EntityPredicates.EXCEPT_CREATIVE_OR_SPECTATOR.and(PredicateUtil.getVisibleRangeAttackPredicate(entity.getWorld(), entity, entity.getOwner()))));
 
             for (Entity target : entities) {
                 target.damage(target.getWorld().getDamageSources().explosion(entity, entity.getOwner()), 3.0F * strength);

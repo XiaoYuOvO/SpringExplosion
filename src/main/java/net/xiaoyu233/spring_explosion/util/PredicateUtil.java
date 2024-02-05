@@ -2,6 +2,7 @@ package net.xiaoyu233.spring_explosion.util;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.Ownable;
 import net.minecraft.scoreboard.AbstractTeam;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
@@ -28,6 +29,19 @@ public class PredicateUtil {
     @NotNull
     public static Predicate<Entity> getNotSameTeamAsOwnerPredicate(@Nullable Entity owner) {
         return entity -> canHitEntityWithOwner(owner, entity);
+    }
+
+    public static Predicate<Entity> getOwnerNotSameTeamPredicate(@Nullable Entity owner) {
+        return entity -> {
+            if (owner == null) return true;
+            if (entity instanceof Ownable ownable){
+                return ownable.getOwner() == null || (ownable.getOwner() != null && ownable.getOwner().getScoreboardTeam() != owner.getScoreboardTeam());
+            }
+
+            AbstractTeam team = owner.getScoreboardTeam();
+            if (team == null) return true;
+            return team != entity.getScoreboardTeam();
+        };
     }
 
     public static boolean canHitEntityWithOwner(Entity owner, Entity entity) {

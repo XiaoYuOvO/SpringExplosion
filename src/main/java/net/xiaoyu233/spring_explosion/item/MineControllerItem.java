@@ -1,6 +1,5 @@
 package net.xiaoyu233.spring_explosion.item;
 
-import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -42,6 +41,11 @@ public class MineControllerItem extends DefaultGeoItem<MineControllerItem, MineC
     }
 
     @Override
+    public boolean hasGlint(ItemStack stack) {
+        return SEItemComponents.FIREWORK_MINE_CONTROLLER.maybeGet(stack).map(component -> component.getPrepareTime() <= 0).orElse(false);
+    }
+
+    @Override
     public void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected) {
         Optional<MineControllerItemComponent> maybe = SEItemComponents.FIREWORK_MINE_CONTROLLER.maybeGet(stack);
         if (maybe.isPresent() && entity instanceof LivingEntity livingEntity) {
@@ -49,7 +53,6 @@ public class MineControllerItem extends DefaultGeoItem<MineControllerItem, MineC
             if (component.getPrepareTime() > 0) {
                 component.setPrepareTime(component.getPrepareTime() - 1);
                 if (component.getPrepareTime() == 0) {
-                    stack.addEnchantment(Enchantments.POWER, 1);
                     component.setPrepareTime(0);
                     stack.setDamage(0);
                 }else {

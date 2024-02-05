@@ -6,6 +6,7 @@
   "mixins": [
     "ExplosionMixin",
     "ItemStackMixin",
+    "LivingEntityMixin",
     "PlayerEntityMixin"
   ],
   "client": [

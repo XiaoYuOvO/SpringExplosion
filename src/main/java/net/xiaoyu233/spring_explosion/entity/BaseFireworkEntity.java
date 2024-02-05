@@ -7,13 +7,12 @@ import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.xiaoyu233.spring_explosion.fireworks.BaseFirework;
 
-public abstract class BaseFireworkEntity<E extends BaseFireworkEntity<E,?>, F extends BaseFirework<E,?,?>> extends OwnedGeoEntity {
+public abstract class BaseFireworkEntity<E extends BaseFireworkEntity<E,?>, F extends BaseFirework<E,?,?>> extends OwnedGeoEntity implements IFireworkEntity {
     private static final TrackedData<Integer> DURATION_REMAIN = DataTracker.registerData(BaseFireworkEntity.class, TrackedDataHandlerRegistry.INTEGER);
     private static final TrackedData<Integer> FUSE_REMAIN = DataTracker.registerData(BaseFireworkEntity.class, TrackedDataHandlerRegistry.INTEGER);
 
@@ -50,33 +49,32 @@ public abstract class BaseFireworkEntity<E extends BaseFireworkEntity<E,?>, F ex
         return this.getDurationRemain() / (float) this.getFirework().getFiringTime();
     }
 
+    protected boolean shouldTickFiring(){
+        return true;
+    }
     @Override
     public void tick() {
         super.tick();
         int fuseRemain = this.getFuseRemain();
         if (fuseRemain > 0) {
             this.setFuseRemain(fuseRemain - 1);
-            this.getFirework().onEntityFusing((E) this);
-        }else {
+            this.onEntityFusing();
+        }else if (shouldTickFiring()){
             int durationRemain = this.getDurationRemain();
             if (fuseRemain == 0 && durationRemain == this.getFirework().getFiringTime()){
-                this.getFirework().onEntityStartFiring((E) this);
+                this.onEntityStartFiring();
             }
             if (durationRemain > 0) {
                 this.setDurationRemain(durationRemain - 1);
-//            if (!this.getWorld().isClient) {
-                this.getFirework().onEntityFiring((E) this);
-//            }
+                this.onEntityFiring();
             } else {
-                this.getFirework().onEntityStopFiring((E) this);
+                this.onEntityStopFiring();
                 this.discard();
             }
         }
         if (!this.getWorld().isClient){
             if (this.isSubmergedInWater()) {
-                this.playSound(SoundEvents.BLOCK_FIRE_EXTINGUISH,1,1);
-                this.playSound(SoundEvents.ENTITY_ITEM_BREAK,1,1);
-                this.discard();
+                disposeOnWater();
             }
             if (!this.hasNoGravity()) {
                 this.setVelocity(this.getVelocity().add(0.0, -this.getGravity(), 0.0));
@@ -85,13 +83,29 @@ public abstract class BaseFireworkEntity<E extends BaseFireworkEntity<E,?>, F ex
                 this.setVelocity(this.getVelocity().multiply(0.5));
             }
 
-            if (this.shouldSelfMove()) {
-                this.move(MovementType.SELF, this.getVelocity());
-            }
             if (!this.isOnGround()) {
                 this.setVelocity(this.getVelocity().multiply(0.95));
             }
         }
+        if (this.shouldSelfMove()) {
+            this.move(MovementType.SELF, this.getVelocity());
+        }
+    }
+
+    protected void onEntityFusing() {
+        this.getFirework().onEntityFusing((E) this);
+    }
+
+    protected void onEntityStartFiring() {
+        this.getFirework().onEntityStartFiring((E) this);
+    }
+
+    protected void onEntityStopFiring() {
+        this.getFirework().onEntityStopFiring((E) this);
+    }
+
+    protected void onEntityFiring() {
+        this.getFirework().onEntityFiring((E) this);
     }
 
     protected boolean shouldSelfMove(){

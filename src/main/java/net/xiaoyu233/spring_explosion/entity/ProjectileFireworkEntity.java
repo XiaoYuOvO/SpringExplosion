@@ -76,7 +76,9 @@ public abstract class ProjectileFireworkEntity<E extends BaseFireworkEntity<E,?>
         }
 
         this.setVelocity(vec3d.multiply(h));
-//        this.setPosition(d, e, f);
+        if (!shouldSelfMove()){
+            this.setPosition(d, e, f);
+        }
     }
 
     protected void checkBlockCollision() {
@@ -120,25 +122,6 @@ public abstract class ProjectileFireworkEntity<E extends BaseFireworkEntity<E,?>
             Entity owner = this.getOwner();
             return PredicateUtil.canHitEntityWithOwner(entity, owner) && (owner == null || !owner.isConnectedThroughVehicle(entity));
         }
-    }
-
-    protected void updateRotation() {
-        Vec3d vec3d = this.getVelocity();
-        double d = vec3d.horizontalLength();
-        this.setPitch(updateRotation(this.prevPitch, (float)(MathHelper.atan2(vec3d.y, d) * 57.2957763671875)));
-        this.setYaw(updateRotation(this.prevYaw, (float)(MathHelper.atan2(vec3d.x, vec3d.z) * 57.2957763671875)));
-    }
-
-    protected static float updateRotation(float prevRot, float newRot) {
-        while(newRot - prevRot < -180.0F) {
-            prevRot -= 360.0F;
-        }
-
-        while(newRot - prevRot >= 180.0F) {
-            prevRot += 360.0F;
-        }
-
-        return MathHelper.lerp(0.2F, prevRot, newRot);
     }
 
     protected void onCollision(HitResult hitResult) {

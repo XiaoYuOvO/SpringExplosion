@@ -34,11 +34,15 @@ public abstract class BaseFireworkItem<F extends BaseFirework<?, I, IR>, I exten
         return firework.getRenderer();
     }
 
+    public int getItemBarStep(ItemStack stack) {
+        return Math.round(13.0F - (float)stack.getDamage() * 13.0F / (float)this.getMaxDamage(stack));
+    }
+
     public F getFirework(){
         return this.firework;
     }
 
-    public void createAndThrowFirework(World world, ItemStack stack, LivingEntity user, FireworkItemToEntityAction action){
+    public void createAndThrowFirework(World world, ItemStack stack, LivingEntity user, FireworkItemToEntityAction<BaseFireworkEntity<?,?>> action){
         BaseFireworkEntity<?, ?> fireworkEntity = this.firework.createEntity(world, stack, user);
         world.spawnEntity(fireworkEntity);
         action.apply(fireworkEntity, user);
@@ -76,9 +80,15 @@ public abstract class BaseFireworkItem<F extends BaseFirework<?, I, IR>, I exten
                     }
                 }else if (fuseUsage == FireworkUsage.ENTITY){
                     createAndThrowFirework(world, stack, livingEntity, firework.getDropAction());
+                    fireworkItemBaseComponent.setFusing(false);
                     stack.decrement(1);
                 }else if (!selected){
-                    createAndThrowFirework(world, stack, livingEntity, firework.getOffhandAction());
+                    if (livingEntity.getStackInHand(Hand.OFF_HAND) != stack) {
+                        createAndThrowFirework(world, stack, livingEntity, firework.getOffhandAction());
+                    }else {
+                        createAndThrowFirework(world, stack, livingEntity, firework.getFusingToEntityFiringAction());
+                    }
+                    fireworkItemBaseComponent.setFusing(false);
                     stack.decrement(1);
                 }else {
                     fireworkItemBaseComponent.setFusing(false);
@@ -98,6 +108,9 @@ public abstract class BaseFireworkItem<F extends BaseFirework<?, I, IR>, I exten
                         createAndThrowFirework(world, stack, livingEntity, firework.getOffhandAction());
                     }
                     stack.decrement(1);
+                    fireworkItemBaseComponent.setFiring(false);
+                    fireworkItemBaseComponent.setFusing(false);
+                    livingEntity.swingHand(Hand.MAIN_HAND);
                 }
             }
         }

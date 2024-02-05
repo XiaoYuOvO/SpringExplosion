@@ -32,10 +32,10 @@ public class SparkSword extends BaseFirework<SparkSwordEntity, SparkSwordItem, S
     public static final SparkSword INSTANCE = new SparkSword();
     @Override
     public void onEntityFiring(SparkSwordEntity entity) {
-        damageEntityAndSpawnParticles(entity.getEntityWorld(), entity, entity.getOwner(), entity.getStrength());
+        damageEntityAndSpawnParticles(entity.getEntityWorld(), CollisionUtil.PosingMethod.DOWN_CENTER, entity, entity.getOwner(), entity.getStrength());
     }
 
-    public static void damageEntityAndSpawnParticles(World world, @NotNull Entity attacker, @Nullable Entity source, float strength) {
+    public static void damageEntityAndSpawnParticles(World world, CollisionUtil.PosingMethod method, @NotNull Entity attacker, @Nullable Entity source, float strength) {
         float maxDistance = 4 - 2 * strength;
         Vec3d rotationVec = attacker.getRotationVec(0);
         Vec3d startPos;
@@ -44,9 +44,9 @@ public class SparkSword extends BaseFirework<SparkSwordEntity, SparkSwordItem, S
         } else {
             startPos = attacker.getEyePos().add(attacker.getHandPosOffset(SEItems.SPARK_SWORD)).add(0, 0.08, 0).add(rotationVec.multiply(0.5f));
         }
-        float angle = 60 - 20 * strength;
+        float angle = 40 + 20 * strength;
         if (!world.isClient) {
-            for (Entity entity : CollisionUtil.collideInConical(attacker, world, maxDistance, angle * MathHelper.RADIANS_PER_DEGREE, EntityPredicates.EXCEPT_CREATIVE_OR_SPECTATOR.and(
+            for (Entity entity : CollisionUtil.collideInConical(attacker, method, attacker.getRotationVector(), world, maxDistance, angle * MathHelper.RADIANS_PER_DEGREE, EntityPredicates.EXCEPT_CREATIVE_OR_SPECTATOR.and(
                     PredicateUtil.getVisibleRangeAttackPredicate(world, attacker, source)))) {
                 entity.damage(world.getDamageSources().explosion(attacker, source), 5 - 2 * strength);
             }
@@ -57,7 +57,7 @@ public class SparkSword extends BaseFirework<SparkSwordEntity, SparkSwordItem, S
 
     @Override
     public void onItemFiring(World world, ItemStack itemStack, LivingEntity user, int slot, float strength) {
-        damageEntityAndSpawnParticles(world, user, user, strength);
+        damageEntityAndSpawnParticles(world, CollisionUtil.PosingMethod.EYE, user, user, strength);
     }
 
     @Override
