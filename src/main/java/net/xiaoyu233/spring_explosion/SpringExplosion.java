@@ -1,8 +1,10 @@
 package net.xiaoyu233.spring_explosion;
 
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerWorldEvents;
 import net.xiaoyu233.spring_explosion.client.sound.SESoundEvents;
+import net.xiaoyu233.spring_explosion.command.MapCommand;
 import net.xiaoyu233.spring_explosion.components.items.SEItemComponents;
 import net.xiaoyu233.spring_explosion.effect.SEEffects;
 import net.xiaoyu233.spring_explosion.entity.SEEntityTypes;
@@ -18,6 +20,8 @@ public class SpringExplosion implements ModInitializer {
         SESoundEvents.registerSounds();
         SEEffects.register();
         SEParticles.initialize();
+        CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> MapCommand.register(dispatcher));
+
         ServerWorldEvents.LOAD.register((server, world) -> {
             //Prevent for crash :)
             SEItemComponents.FIREWORK_ITEM_BASE.get(SEItems.SPARK_SWORD.getDefaultStack());
@@ -31,6 +35,7 @@ public class SpringExplosion implements ModInitializer {
             SEItemComponents.FIREWORK_ITEM_BASE.get(SEItems.OILY_BOMB.getDefaultStack());
             SEItemComponents.FIREWORK_ITEM_BASE.get(SEItems.SMOKE_BOMB.getDefaultStack());
             SEItemComponents.FIREWORK_ITEM_BASE.get(SEItems.FIREWORK_MACHINE_GUN.getDefaultStack());
+            SEItemComponents.FIREWORK_ITEM_BASE.get(SEItems.FIREWORK_JETPACK.getDefaultStack());
             SEItemComponents.FIREWORK_MINE_CONTROLLER.get(SEItems.FIREWORK_MINE_CONTROLLER.getDefaultStack());
             SEItemComponents.FIRECRACKER.get(SEItems.FIRECRACKERS.getDefaultStack());
         });

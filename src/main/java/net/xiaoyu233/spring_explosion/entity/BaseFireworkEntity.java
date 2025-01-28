@@ -7,10 +7,13 @@ import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.scoreboard.AbstractTeam;
+import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.xiaoyu233.spring_explosion.fireworks.BaseFirework;
+import org.jetbrains.annotations.Nullable;
 
 public abstract class BaseFireworkEntity<E extends BaseFireworkEntity<E,?>, F extends BaseFirework<E,?,?>> extends OwnedGeoEntity implements IFireworkEntity {
     private static final TrackedData<Integer> DURATION_REMAIN = DataTracker.registerData(BaseFireworkEntity.class, TrackedDataHandlerRegistry.INTEGER);
@@ -24,6 +27,23 @@ public abstract class BaseFireworkEntity<E extends BaseFireworkEntity<E,?>, F ex
 
     protected int getDurationRemain() {
         return this.dataTracker.get(DURATION_REMAIN);
+    }
+
+    @Override
+    public void discardFirework() {
+        this.discard();
+    }
+
+    @Override
+    public void playSound(SoundEvent sound, float volume, float pitch) {
+        super.playSound(sound, volume, pitch);
+    }
+
+    @Override
+    public @Nullable AbstractTeam getScoreboardTeam() {
+        Entity owner = this.getOwner();
+        if (owner != null) return owner.getScoreboardTeam();
+        else return super.getScoreboardTeam();
     }
 
     protected int getFuseRemain() {
@@ -69,10 +89,10 @@ public abstract class BaseFireworkEntity<E extends BaseFireworkEntity<E,?>, F ex
                 this.onEntityFiring();
             } else {
                 this.onEntityStopFiring();
-                this.discard();
+                if (!this.getWorld().isClient)this.discard();
             }
         }
-        if (!this.getWorld().isClient){
+//        if (!this.getWorld().isClient){
             if (this.isSubmergedInWater()) {
                 disposeOnWater();
             }
@@ -86,7 +106,7 @@ public abstract class BaseFireworkEntity<E extends BaseFireworkEntity<E,?>, F ex
             if (!this.isOnGround()) {
                 this.setVelocity(this.getVelocity().multiply(0.95));
             }
-        }
+//        }
         if (this.shouldSelfMove()) {
             this.move(MovementType.SELF, this.getVelocity());
         }
@@ -164,12 +184,14 @@ public abstract class BaseFireworkEntity<E extends BaseFireworkEntity<E,?>, F ex
 
     @Override
     protected void readCustomDataFromNbt(NbtCompound nbt) {
+        super.readCustomDataFromNbt(nbt);
         this.setDurationRemain(nbt.getInt("DurationRemain"));
         this.setFuseRemain(nbt.getInt("FuseRemain"));
     }
 
     @Override
     protected void writeCustomDataToNbt(NbtCompound nbt) {
+        super.writeCustomDataToNbt(nbt);
         nbt.putInt("DurationRemain", this.getDurationRemain());
         nbt.putInt("FuseRemain", this.getFuseRemain());
     }

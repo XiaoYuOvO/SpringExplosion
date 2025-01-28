@@ -1,0 +1,97 @@
+{
+  "credit": "Made with Blockbench",
+  "parent": "builtin/entity",
+  "texture_size": [
+    128,
+    128
+  ],
+  "display": {
+    "thirdperson_righthand": {
+      "rotation": [
+        62,
+        0,
+        0
+      ],
+      "translation": [
+        -6,
+        1.25,
+        -1.75
+      ]
+    },
+    "thirdperson_lefthand": {
+      "rotation": [
+        62,
+        0,
+        0
+      ],
+      "translation": [
+        -6,
+        1.75,
+        -1.75
+      ]
+    },
+    "firstperson_righthand": {
+      "rotation": [
+        7,
+        0,
+        0
+      ],
+      "translation": [
+        -9,
+        0.25,
+        0
+      ]
+    },
+    "firstperson_lefthand": {
+      "rotation": [
+        7,
+        0,
+        0
+      ],
+      "translation": [
+        -9,
+        0.25,
+        0
+      ]
+    },
+    "ground": {
+      "translation": [
+        0,
+        -3.25,
+        0
+      ],
+      "scale": [
+        1.263671875,
+        1.263671875,
+        1.263671875
+      ]
+    },
+    "gui": {
+      "rotation": [
+        4,
+        0,
+        0
+      ],
+      "translation": [
+        0,
+        -5.25,
+        0
+      ],
+      "scale": [
+        1.556640625,
+        1.556640625,
+        1.556640625
+      ]
+    },
+    "fixed": {
+      "rotation": [
+        -90,
+        0,
+        0
+      ]
+    }
+  },
+  "textures": {
+    "particle": "spring_explosion:item/firework_missile"
+  }
+}

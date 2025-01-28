@@ -18,7 +18,7 @@ public class FireCircle extends BaseFirework<FireCircleEntity, FireCircleItem, F
     public static final int SUB_COUNT = 36;
     public static final int SUB_RADIUS = 8;
     public static final int SUMMON_INTERVAL = 0;
-    public static final int FUSE_TIME = 40;
+    public static final int FUSE_TIME = 20;
 
     @Override
     public void onEntityFiring(FireCircleEntity entity) {

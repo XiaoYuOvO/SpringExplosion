@@ -8,14 +8,15 @@ import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.particle.ParticleTypes;
+import net.minecraft.registry.tag.DamageTypeTags;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
-import net.minecraft.world.explosion.EntityExplosionBehavior;
 import net.minecraft.world.explosion.Explosion;
 import net.xiaoyu233.spring_explosion.client.sound.SESoundEvents;
 import org.jetbrains.annotations.NotNull;
@@ -31,7 +32,8 @@ public class FirecrackersEntity extends OwnedGeoEntity implements IFireworkEntit
     private FirecrackersEntity nextFirecracker;
     private UUID nextFirecrackerUUID;
     private boolean explodeNextTick = false;
-    private int explodeInterval = 2;
+    private int explodeInterval = 3;
+    private int life = 120 * 20;
     public FirecrackersEntity(EntityType<?> type, World world) {
         super(type, world);
     }
@@ -46,6 +48,15 @@ public class FirecrackersEntity extends OwnedGeoEntity implements IFireworkEntit
         this.nextFirecrackerUUID = nextFirecracker.getUuid();
     }
 
+    @Override
+    public void discardFirework() {
+        this.discard();
+    }
+
+    @Override
+    public void playSound(SoundEvent sound, float volume, float pitch) {
+        super.playSound(sound, volume, pitch);
+    }
 
 
     @Nullable
@@ -76,6 +87,7 @@ public class FirecrackersEntity extends OwnedGeoEntity implements IFireworkEntit
         if(nbt.contains("LastFirecrackers")) this.lastFirecrackerUUID = nbt.getUuid("LastFirecrackers");
         if(nbt.contains("NextFirecrackers")) this.nextFirecrackerUUID = nbt.getUuid("NextFirecrackers");
         explodeNextTick = nbt.getBoolean("ExplodeNextTick");
+        this.life = nbt.getInt("Life");
     }
 
     @Override
@@ -84,6 +96,7 @@ public class FirecrackersEntity extends OwnedGeoEntity implements IFireworkEntit
         if (lastFirecracker != null) nbt.putUuid("LastFirecrackers", lastFirecrackerUUID);
         if (nextFirecracker != null) nbt.putUuid("NextFirecrackers", nextFirecrackerUUID);
         nbt.putBoolean("ExplodeNextTick", explodeNextTick);
+        nbt.putInt("Life",this.life);
     }
 
     @Override
@@ -109,6 +122,11 @@ public class FirecrackersEntity extends OwnedGeoEntity implements IFireworkEntit
             }
             if (this.isSubmergedInWater()) {
                 disposeOnWater();
+            }
+            if (this.life > 0){
+                this.life--;
+            }else {
+                this.discard();
             }
 
 
@@ -139,6 +157,9 @@ public class FirecrackersEntity extends OwnedGeoEntity implements IFireworkEntit
 
     @Override
     public boolean damage(DamageSource source, float amount) {
+        if (source.isIn(DamageTypeTags.IS_EXPLOSION) && !(source.getSource() instanceof FirecrackersEntity) && this.getOwner() != null && source.getAttacker() == this.getOwner()){
+            this.explodeNextTick = true;
+        }
         return false;
     }
 
@@ -155,12 +176,12 @@ public class FirecrackersEntity extends OwnedGeoEntity implements IFireworkEntit
         World world = this.getWorld();
         if (!world.isClient){
             world.sendEntityStatus(this, EXPLODE_STATUS);
-            world.createExplosion(this, this.getWorld().getDamageSources().explosion(this, this.getOwner()), new EntityExplosionBehavior(this), this.getX(), this.getY(), this.getZ(), 1.2f, false, World.ExplosionSourceType.MOB, false);
+            world.createExplosion(this, this.getWorld().getDamageSources().explosion(this, this.getOwner()), new FireworkExplosionBehavior<>(this), this.getX(), this.getY(), this.getZ(), 1.2f, false, World.ExplosionSourceType.MOB, false);
             FirecrackersEntity lastFirecracker1 = getLastFirecracker();
             if (lastFirecracker1 != null) lastFirecracker1.explodeNextTick = true;
             FirecrackersEntity nextFirecracker1 = getNextFirecracker();
             if (nextFirecracker1 != null) nextFirecracker1.explodeNextTick = true;
-            this.playSound(SESoundEvents.FIRECRACKER_EXPLODE, 1F, 0.9F + random.nextFloat() * 0.2f);
+            this.playSound(SESoundEvents.FIRECRACKER_EXPLODE, 1.5F, 0.9F + random.nextFloat() * 0.2f);
             this.discard();
         }else {
             for (int i = 0; i < 10; ++i){

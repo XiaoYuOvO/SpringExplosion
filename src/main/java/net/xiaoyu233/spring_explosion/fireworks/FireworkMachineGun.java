@@ -20,15 +20,16 @@ import java.util.function.Supplier;
 
 public class FireworkMachineGun extends BaseFirework<FireworkMachineGunEntity, FireworkMachineGunItem, FireworkMachineGunItemRenderer> {
     public static final FireworkMachineGun INSTANCE = new FireworkMachineGun();
-    public static final int FIRING_TIME = 80;
+    public static final int FIRING_TIME = 160;
     public static final int FUSING_TIME = 40;
     @Override
     public void onEntityFiring(FireworkMachineGunEntity entity) {
-        if (entity.age % 3 == 0) {
+        if (entity.age % 10 == 0) {
             World world = entity.getWorld();
             if (!world.isClient) {
                 FireworkBulletEntity fireworkBulletEntity = SEEntityTypes.FIREWORK_BULLET.create(world);
                 fireworkBulletEntity.setOwner(entity.getOwner());
+                fireworkBulletEntity.updatePositionAndAngles(entity.getX(), entity.getEyeY(), entity.getZ(), entity.getYaw(), entity.getPitch());
                 world.spawnEntity(fireworkBulletEntity);
                 fireworkBulletEntity.updatePositionAndAngles(entity.getX(), entity.getEyeY(), entity.getZ(), entity.getYaw(), entity.getPitch());
             }
@@ -38,11 +39,12 @@ public class FireworkMachineGun extends BaseFirework<FireworkMachineGunEntity, F
 
     @Override
     public void onItemFiring(World world, ItemStack itemStack, LivingEntity user, int slot, float strength) {
-        if (user.age % 3 == 0) {
+        if (user.age % 10 == 0) {
             if (!world.isClient) {
                 FireworkBulletEntity fireworkBulletEntity = SEEntityTypes.FIREWORK_BULLET.create(world);
                 fireworkBulletEntity.setOwner(user);
 //                fireworkBulletEntity.setVelocity(user, user.getPitch(), user.getYaw(), 0, 0.3f, 0);
+                fireworkBulletEntity.updatePositionAndAngles(user.getX(), user.getEyeY() - 0.3d, user.getZ(), user.getYaw(), user.getPitch());
                 world.spawnEntity(fireworkBulletEntity);
                 fireworkBulletEntity.updatePositionAndAngles(user.getX(), user.getEyeY() - 0.3d, user.getZ(), user.getYaw(), user.getPitch());
             }

@@ -1,5 +1,7 @@
 package net.xiaoyu233.spring_explosion.fireworks;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
@@ -15,6 +17,7 @@ import net.xiaoyu233.spring_explosion.entity.BaseFireworkEntity;
 import net.xiaoyu233.spring_explosion.entity.RocketAcceleratorEntity;
 import net.xiaoyu233.spring_explosion.entity.SEEntityTypes;
 import net.xiaoyu233.spring_explosion.item.RocketAcceleratorItem;
+import net.xiaoyu233.spring_explosion.util.EntityUtil;
 import net.xiaoyu233.spring_explosion.util.ItemUtil;
 import net.xiaoyu233.spring_explosion.util.ParticleUtil;
 import org.jetbrains.annotations.NotNull;
@@ -30,9 +33,9 @@ public class RocketAccelerator extends BaseFirework<RocketAcceleratorEntity, Roc
                 entity.playSound(SESoundEvents.ROCKET_ACCELERATOR, 1  * entity.getStrength(), 1);
             }
         }else {
-            addVelocityAndSpawnParticle(entity);
+            spawnParticle(entity);
         }
-        Vec3d rotationVector = ParticleUtil.getRotationVector(0, entity.getBodyYaw());
+        Vec3d rotationVector = EntityUtil.getRotationVector(0, entity.getBodyYaw());
         entity.addVelocity(rotationVector.multiply(entity.isOnGround() ? 0.5 : 0.1));
     }
 
@@ -51,15 +54,16 @@ public class RocketAccelerator extends BaseFirework<RocketAcceleratorEntity, Roc
             if (livingEntity.age % 10 == 0) {
                 livingEntity.playSound(SESoundEvents.ROCKET_ACCELERATOR, 1 * strength, 1);
             }
-            Vec3d rotationVector = ParticleUtil.getRotationVector(0, livingEntity.getBodyYaw());
+            Vec3d rotationVector = EntityUtil.getRotationVector(0, livingEntity.getBodyYaw());
             livingEntity.addVelocity(rotationVector.multiply(livingEntity.isOnGround() ? 0.5 : 0.1));
-            addVelocityAndSpawnParticle(livingEntity);
+            spawnParticle(livingEntity);
         }
     }
 
-    private static void addVelocityAndSpawnParticle(Entity entity) {
+    @Environment(EnvType.CLIENT)
+    private static void spawnParticle(Entity entity) {
         World world = entity.getWorld();
-        Vec3d rotationVector = ParticleUtil.getRotationVector(0, entity.getBodyYaw());
+        Vec3d rotationVector = EntityUtil.getRotationVector(0, entity.getBodyYaw());
         Vec3d left = rotationVector.rotateY(90).multiply(0.5);
         Vec3d right = rotationVector.rotateY(-90).multiply(0.5);
         Vec2f back = new Vec2f(0, entity.getBodyYaw() + 180);

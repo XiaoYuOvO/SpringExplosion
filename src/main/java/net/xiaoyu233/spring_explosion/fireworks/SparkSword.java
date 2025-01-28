@@ -25,6 +25,7 @@ import net.xiaoyu233.spring_explosion.util.ParticleUtil;
 import net.xiaoyu233.spring_explosion.util.PredicateUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.joml.Vector3f;
 
 import java.util.function.Supplier;
 
@@ -36,22 +37,25 @@ public class SparkSword extends BaseFirework<SparkSwordEntity, SparkSwordItem, S
     }
 
     public static void damageEntityAndSpawnParticles(World world, CollisionUtil.PosingMethod method, @NotNull Entity attacker, @Nullable Entity source, float strength) {
-        float maxDistance = 4 - 2 * strength;
-        Vec3d rotationVec = attacker.getRotationVec(0);
-        Vec3d startPos;
-        if (attacker instanceof PlayerEntity) {
-            startPos = attacker.getEyePos().add(attacker.getHandPosOffset(SEItems.SPARK_SWORD)).subtract(0, 0.5, 0).add(rotationVec);
-        } else {
-            startPos = attacker.getEyePos().add(attacker.getHandPosOffset(SEItems.SPARK_SWORD)).add(0, 0.08, 0).add(rotationVec.multiply(0.5f));
-        }
+        float maxDistance = 6 * strength;
         float angle = 40 + 20 * strength;
-        if (!world.isClient) {
+        if (!attacker.getWorld().isClient) {
             for (Entity entity : CollisionUtil.collideInConical(attacker, method, attacker.getRotationVector(), world, maxDistance, angle * MathHelper.RADIANS_PER_DEGREE, EntityPredicates.EXCEPT_CREATIVE_OR_SPECTATOR.and(
                     PredicateUtil.getVisibleRangeAttackPredicate(world, attacker, source)))) {
-                entity.damage(world.getDamageSources().explosion(attacker, source), 5 - 2 * strength);
+                entity.damage(world.getDamageSources().explosion(attacker, source), Math.max(3.5f * strength,0));
             }
         }else {
-            ParticleUtil.spawnConicalParticlesFromFacing(world, attacker.getRotationClient(), startPos, attacker.getVelocity(), (int) (10 * strength), maxDistance, angle);
+            Vec3d rotationVec = attacker.getRotationVec(0);
+            Vec3d startPos;
+            if (attacker instanceof PlayerEntity) {
+                startPos = attacker.getEyePos().add(attacker.getHandPosOffset(SEItems.SPARK_SWORD)).subtract(0, 0.5, 0).add(rotationVec);
+            } else {
+                startPos = attacker.getEyePos().add(attacker.getHandPosOffset(SEItems.SPARK_SWORD)).add(0, 0.08, 0).add(rotationVec.multiply(0.5f));
+            }
+            ParticleUtil.spawnConicalParticlesFromFacing(world, attacker.getRotationClient(), startPos, attacker.getVelocity(), (int) (10 * strength), maxDistance, angle, particle -> {
+                Vector3f vector3f = ParticleUtil.HSBtoRGB(strength, (float) (0.9 + world.random.nextGaussian() * 0.1f), 1);
+                particle.setColor(vector3f.x, vector3f.y, vector3f.z);
+            });
         }
     }
 

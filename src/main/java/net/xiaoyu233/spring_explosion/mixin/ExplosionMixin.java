@@ -1,5 +1,7 @@
 package net.xiaoyu233.spring_explosion.mixin;
 
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.Ownable;
@@ -9,6 +11,7 @@ import net.minecraft.util.math.Box;
 import net.minecraft.world.World;
 import net.minecraft.world.explosion.Explosion;
 import net.minecraft.world.explosion.ExplosionBehavior;
+import net.xiaoyu233.spring_explosion.entity.FireworkExplosionBehavior;
 import net.xiaoyu233.spring_explosion.entity.IExplosionEntityRecord;
 import net.xiaoyu233.spring_explosion.util.PredicateUtil;
 import org.jetbrains.annotations.Nullable;
@@ -39,6 +42,8 @@ public abstract class ExplosionMixin implements IExplosionEntityRecord {
 
     @Shadow @Final private @Nullable Entity entity;
 
+    @Shadow @Final private ExplosionBehavior behavior;
+
     @Redirect(method = "collectBlocksAndDamageEntities", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;getOtherEntities(Lnet/minecraft/entity/Entity;Lnet/minecraft/util/math/Box;)Ljava/util/List;"))
     private List<Entity> redirectGetOtherEntities(World instance, Entity entity, Box box){
         Entity causingEntity = this.entity;
@@ -52,5 +57,13 @@ public abstract class ExplosionMixin implements IExplosionEntityRecord {
     @Inject(method = "collectBlocksAndDamageEntities", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/Entity;damage(Lnet/minecraft/entity/damage/DamageSource;F)Z", shift = At.Shift.AFTER))
     private void injectRecordEntity(CallbackInfo ci, @Local Entity entity){
         this.affectedEntities.add(entity);
+    }
+
+    @WrapOperation(method = "collectBlocksAndDamageEntities", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/Entity;damage(Lnet/minecraft/entity/damage/DamageSource;F)Z"))
+    private boolean wrapModifyExplosionEntityDamage(Entity instance, DamageSource source, float amount, Operation<Boolean> original, @Local(ordinal = 5) double exposure){
+        if (behavior instanceof FireworkExplosionBehavior<?> fireworkExplosionBehavior) {
+            return original.call(instance, source, fireworkExplosionBehavior.modifyEntityExplosionDamage((Explosion)((Object)this), instance, amount, exposure));
+        }
+        return original.call(instance, source, amount);
     }
 }

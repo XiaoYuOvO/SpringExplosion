@@ -3,7 +3,6 @@ package net.xiaoyu233.spring_explosion.fireworks;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.render.entity.model.BipedEntityModel;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -61,7 +60,15 @@ public abstract class BaseFirework<E extends BaseFireworkEntity<E, ?>, I extends
             fireworkEntity.setFuseRemain(0);
             fireworkEntity.setDurationRemain(stack.getMaxDamage() - stack.getDamage());
         }
+        int thrownUseCooldown = getThrownUseCooldown();
+        if (thrownUseCooldown != 0 && user instanceof PlayerEntity player) {
+            player.getItemCooldownManager().set(stack.getItem(), thrownUseCooldown);
+        }
         return fireworkEntity;
+    }
+
+    protected int getThrownUseCooldown(){
+        return 0;
     }
 
     @NotNull

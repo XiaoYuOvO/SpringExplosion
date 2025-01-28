@@ -16,6 +16,7 @@ import net.xiaoyu233.spring_explosion.client.render.item.FireworkJetpackItemRend
 import net.xiaoyu233.spring_explosion.entity.FireworkJetpackEntity;
 import net.xiaoyu233.spring_explosion.entity.SEEntityTypes;
 import net.xiaoyu233.spring_explosion.item.FireworkJetpackItem;
+import net.xiaoyu233.spring_explosion.util.EntityUtil;
 import net.xiaoyu233.spring_explosion.util.ItemUtil;
 import net.xiaoyu233.spring_explosion.util.ParticleUtil;
 import org.jetbrains.annotations.NotNull;
@@ -36,21 +37,32 @@ public class FireworkJetpack extends BaseFirework<FireworkJetpackEntity, Firewor
             user.playSound(SoundEvents.BLOCK_FIRE_EXTINGUISH,1,1);
             user.playSound(SoundEvents.ENTITY_ITEM_BREAK,1,1);
         }
-        if (itemStack.getDamage() ==  60 || itemStack.getDamage() == 1){
-            user.addVelocity(0,2,0);
+        if (itemStack.getDamage() ==  100 || itemStack.getDamage() == 1){
             if (world.isClient){
                 spawnParticle(user,20, new Vec3d(0,1,0));
+            }else {
+                if (itemStack.getDamage() == 1){
+                    user.setNoGravity(itemStack.getDamage() != 100);
+                    user.addStatusEffect(new StatusEffectInstance(StatusEffects.LEVITATION, 7, 10));
+                }else {
+                    user.setNoGravity(false);
+                    user.addStatusEffect(new StatusEffectInstance(StatusEffects.LEVITATION, 25, 15));
+                }
+
             }
-            user.addStatusEffect(new StatusEffectInstance(StatusEffects.SLOW_FALLING, 120 ,0));
+
+            user.addStatusEffect(new StatusEffectInstance(StatusEffects.SLOW_FALLING, 160 ,0));
             user.playSound(SoundEvents.ENTITY_FIREWORK_ROCKET_LAUNCH,1,1);
         }
-        spawnParticle(user,2, new Vec3d(0,-0.1,0));
+        if (world.isClient) {
+            spawnParticle(user, 2, new Vec3d(0, -0.1, 0));
+        }
         ItemUtil.damageItem(itemStack, 1, user);
     }
 
     private static void spawnParticle(Entity entity, int count, Vec3d relVec) {
         World world = entity.getWorld();
-        Vec3d rotationVector = ParticleUtil.getRotationVector(0, entity.getBodyYaw());
+        Vec3d rotationVector = EntityUtil.getRotationVector(0, entity.getBodyYaw());
         Vec3d left = rotationVector.rotateY(90).multiply(0.3);
         Vec3d right = rotationVector.rotateY(-90).multiply(0.3);
         ParticleUtil.spawnDownwardParticles(world, entity.getPos().add(left.x, 0.7, left.z),relVec, count,20);
@@ -70,7 +82,7 @@ public class FireworkJetpack extends BaseFirework<FireworkJetpackEntity, Firewor
 
     @Override
     public int getFiringTime() {
-        return 180;
+        return 260;
     }
 
     @Override

@@ -14,7 +14,7 @@ import java.util.function.Predicate;
 
 public class PredicateUtil {
     @NotNull
-    public static Predicate<Entity> getVisibleRangeAttackPredicate(World world, @NotNull Entity attacker, @Nullable Entity source) {
+    public static <E extends Entity> Predicate<E> getVisibleRangeAttackPredicate(World world, @NotNull Entity attacker, @Nullable Entity source) {
         return entity -> {
             if (!(entity instanceof LivingEntity)) return false;
             HitResult raycast = attacker.raycast(entity.distanceTo(attacker), 0, false);
@@ -34,6 +34,7 @@ public class PredicateUtil {
     public static Predicate<Entity> getOwnerNotSameTeamPredicate(@Nullable Entity owner) {
         return entity -> {
             if (owner == null) return true;
+            if (entity == owner) return false;
             if (entity instanceof Ownable ownable){
                 return ownable.getOwner() == null || (ownable.getOwner() != null && ownable.getOwner().getScoreboardTeam() != owner.getScoreboardTeam());
             }
@@ -44,7 +45,7 @@ public class PredicateUtil {
         };
     }
 
-    public static boolean canHitEntityWithOwner(Entity owner, Entity entity) {
+    public static boolean canHitEntityWithOwner(@Nullable Entity owner,@NotNull Entity entity) {
         if (owner != null) {
             return entity != owner && (owner.getScoreboardTeam() == null || owner.getScoreboardTeam() != entity.getScoreboardTeam());
         } else {

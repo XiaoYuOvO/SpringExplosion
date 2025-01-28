@@ -2,7 +2,6 @@ package net.xiaoyu233.spring_explosion.entity;
 
 import net.minecraft.entity.EntityType;
 import net.minecraft.world.World;
-import net.minecraft.world.explosion.EntityExplosionBehavior;
 import net.xiaoyu233.spring_explosion.fireworks.FireworkBomb;
 import net.xiaoyu233.spring_explosion.util.FireworkUtil;
 
@@ -16,7 +15,7 @@ public class FireworkBombEntity extends BaseBombEntity<FireworkBombEntity, Firew
         if (this.getWorld().isClient) {
             this.getWorld().addFireworkParticle(this.getX(), this.getY(), this.getZ(), 0, 0, 0, FireworkUtil.randomFirework(this.getWorld().random,1));
         }else {
-            this.getWorld().createExplosion(this, this.getWorld().getDamageSources().explosion(this, this.getOwner()), new EntityExplosionBehavior(this), this.getX(), this.getY(), this.getZ(), 1.2f, false, World.ExplosionSourceType.MOB, false);
+            this.getWorld().createExplosion(this, this.getWorld().getDamageSources().explosion(this, this.getOwner()), new FireworkExplosionBehavior<>(this), this.getX(), this.getY(), this.getZ(), 1.2f, false, World.ExplosionSourceType.MOB, false);
         }
     }
 

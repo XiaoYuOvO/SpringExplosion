@@ -36,7 +36,7 @@ public class FireCircleSub extends BaseFirework<FireCircleSubEntity, FireCircleI
 
     @Override
     public int getFiringTime() {
-        return 100;
+        return 160;
     }
 
     @Override

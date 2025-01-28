@@ -26,6 +26,14 @@ public class SparkSwordEntity extends BaseFireworkEntity<SparkSwordEntity, Spark
     }
 
     @Override
+    public void remove(RemovalReason reason) {
+        super.remove(reason);
+//        if (this.getWorld() instanceof ServerWorld serverWorld){
+//            serverWorld.getServer().getPlayerManager().sendToAround(null, this.getX(),this.getY(), this.getZ(), 16, this.getWorld().getRegistryKey(), new StopSoundS2CPacket(SESoundEvents.SPARK_SWORD_ON.getId(), SoundCategory.PLAYERS));
+//        }
+    }
+
+    @Override
     public void setOnGround(boolean onGround) {
         super.setOnGround(onGround);
         if (onGround) {

@@ -78,5 +78,15 @@
       }
     ],
     "subtitle": "subtitle.spring_explosion.firework_machine_gun_fire"
+  },
+  "item.spring_explosion.bomb_explode": {
+    "sounds": [
+        {
+          "attenuation_distance": 16,
+          "volume": 1.2,
+          "name": "spring_explosion:bomb_explode"
+        }
+    ],
+    "subtitle": "subtitle.spring_explosion.bomb_explode"
   }
 }

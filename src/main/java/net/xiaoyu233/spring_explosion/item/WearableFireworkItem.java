@@ -2,6 +2,9 @@ package net.xiaoyu233.spring_explosion.item;
 
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.minecraft.client.item.TooltipContext;
 import net.minecraft.client.render.entity.model.BipedEntityModel;
 import net.minecraft.client.render.item.BuiltinModelItemRenderer;
 import net.minecraft.entity.Entity;
@@ -13,6 +16,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ArmorItem;
 import net.minecraft.item.ArmorMaterial;
 import net.minecraft.item.ItemStack;
+import net.minecraft.text.Text;
 import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.world.World;
@@ -21,6 +25,7 @@ import net.xiaoyu233.spring_explosion.components.items.SEItemComponents;
 import net.xiaoyu233.spring_explosion.entity.BaseFireworkEntity;
 import net.xiaoyu233.spring_explosion.fireworks.BaseFirework;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.animatable.GeoItem;
 import software.bernie.geckolib.animatable.client.RenderProvider;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
@@ -29,20 +34,30 @@ import software.bernie.geckolib.renderer.GeoArmorRenderer;
 import software.bernie.geckolib.renderer.GeoItemRenderer;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
+import java.util.List;
+import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 public abstract class WearableFireworkItem<F extends BaseFirework<?,?,? extends GeoItemRenderer<?>>> extends ArmorItem implements IFireworkItem<F>, GeoItem {
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     private final Supplier<Object> renderProvider = GeoItem.makeRenderer(this);
+    private final @NotNull Supplier<List<Text>> lazyTooltip;
 
     public WearableFireworkItem(ArmorMaterial material, Type type, Settings settings) {
         super(material, type, settings);
+        this.lazyTooltip = BaseFireworkItem.createTooltipCache(Optional.of(getFirework()), this);
     }
 
     @Override
     public Multimap<EntityAttribute, EntityAttributeModifier> getAttributeModifiers(EquipmentSlot slot) {
         return ImmutableMultimap.of();
+    }
+
+    @Override
+    public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
+        super.appendTooltip(stack, world, tooltip, context);
+        tooltip.addAll(this.lazyTooltip.get());
     }
 
     @Override
@@ -66,7 +81,7 @@ public abstract class WearableFireworkItem<F extends BaseFirework<?,?,? extends 
         ItemStack stackInHand = user.getStackInHand(hand);
         SEItemComponents.FIREWORK_ITEM_BASE.get(stackInHand).setFiring(true);
         ItemStack equippedStack = user.getEquippedStack(EquipmentSlot.LEGS);
-        if (user.isSneaking()){
+        if (user.isSneaking() && this.canSpawnEntity()){
             if (!world.isClient) {
                 useToSpawnEntity(world, user, stackInHand);
             }
@@ -75,6 +90,10 @@ public abstract class WearableFireworkItem<F extends BaseFirework<?,?,? extends 
             return TypedActionResult.fail(stackInHand);
         }
         return this.equipAndSwap(this, world, user, hand);
+    }
+
+    protected boolean canSpawnEntity(){
+        return true;
     }
 
     protected void useToSpawnEntity(World world, PlayerEntity user, ItemStack stackInHand) {
@@ -96,6 +115,7 @@ public abstract class WearableFireworkItem<F extends BaseFirework<?,?,? extends 
     }
 
     @Override
+    @Environment(EnvType.CLIENT)
     public void createRenderer(Consumer<Object> consumer) {
         consumer.accept(new RenderProvider() {
 
@@ -124,5 +144,6 @@ public abstract class WearableFireworkItem<F extends BaseFirework<?,?,? extends 
     }
 
     @NotNull
+    @Environment(EnvType.CLIENT)
     protected abstract GeoArmorRenderer<?> createArmorRenderer();
 }

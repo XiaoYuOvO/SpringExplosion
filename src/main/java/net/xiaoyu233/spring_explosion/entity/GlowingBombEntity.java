@@ -8,7 +8,6 @@ import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.world.World;
-import net.minecraft.world.explosion.EntityExplosionBehavior;
 import net.xiaoyu233.spring_explosion.client.sound.SESoundEvents;
 import net.xiaoyu233.spring_explosion.fireworks.GlowingBomb;
 import net.xiaoyu233.spring_explosion.util.ParticleUtil;
@@ -23,7 +22,7 @@ public class GlowingBombEntity extends BaseBombEntity<GlowingBombEntity, Glowing
             for (Entity entity : ((IExplosionEntityRecord) this.getWorld()
                     .createExplosion(this,
                             this.getWorld().getDamageSources().explosion(this, this.getOwner()),
-                            new EntityExplosionBehavior(this),
+                            new FireworkExplosionBehavior<>(this),
                             this.getX(),
                             this.getY(),
                             this.getZ(),
@@ -35,7 +34,7 @@ public class GlowingBombEntity extends BaseBombEntity<GlowingBombEntity, Glowing
                     livingEntity.addStatusEffect(new StatusEffectInstance(StatusEffects.GLOWING, 1200, 1));
                 }
             }
-            this.playSound(SESoundEvents.GLOWING_BOMB_EXPLODE, 1,1);
+            this.playSound(SESoundEvents.GLOWING_BOMB_EXPLODE, 1.5f, (float) (1 + random.nextGaussian() * 0.1f));
         }else {
             ParticleUtil.explodeBall((ClientWorld) getWorld(),this.getPos(), this.random, ParticleTypes.END_ROD, 0.4, 5, true);
         }

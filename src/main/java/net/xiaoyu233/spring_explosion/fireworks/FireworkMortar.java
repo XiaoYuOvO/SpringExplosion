@@ -38,7 +38,7 @@ public class FireworkMortar extends BaseFirework<FireworkMortarEntity, FireworkM
 
     @Override
     public int getFusingTime() {
-        return 40;
+        return 20;
     }
 
     @Override

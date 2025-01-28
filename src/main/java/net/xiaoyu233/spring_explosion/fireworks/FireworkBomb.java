@@ -36,6 +36,11 @@ public class FireworkBomb extends BaseFirework<FireworkBombEntity, FireworkBombI
     }
 
     @Override
+    protected int getThrownUseCooldown() {
+        return 10;
+    }
+
+    @Override
     public int getFiringTime() {
         return 100;
     }

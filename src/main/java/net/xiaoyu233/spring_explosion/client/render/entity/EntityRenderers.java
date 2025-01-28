@@ -21,5 +21,9 @@ public class EntityRenderers {
         EntityRendererRegistry.register(SEEntityTypes.FIREWORK_BULLET, FireworkBulletEntityRenderer::new);
         EntityRendererRegistry.register(SEEntityTypes.FIREWORK_MACHINE_GUN, FireworkMachineGunEntityRenderer::new);
         EntityRendererRegistry.register(SEEntityTypes.FIREWORK_JETPACK, FireworkJetpackEntityRenderer::new);
+        EntityRendererRegistry.register(SEEntityTypes.CRACKER, CrackerEntityRenderer::new);
+        EntityRendererRegistry.register(SEEntityTypes.STICKY_BOMB, StickyBombEntityRenderer::new);
+        EntityRendererRegistry.register(SEEntityTypes.FIREWORK_MISSILE, FireworkMissileEntityRenderer::new);
+        EntityRendererRegistry.register(SEEntityTypes.FIREWORK_MISSILE_BULLET, FireworkMissileBulletEntityRenderer::new);
     }
 }

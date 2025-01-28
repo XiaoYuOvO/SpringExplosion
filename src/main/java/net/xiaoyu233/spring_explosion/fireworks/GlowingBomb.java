@@ -35,6 +35,12 @@ public class GlowingBomb extends BaseFirework<GlowingBombEntity, GlowingBombItem
         return 0;
     }
 
+
+    @Override
+    protected int getThrownUseCooldown() {
+        return 20;
+    }
+
     @Override
     public int getFiringTime() {
         return 60;

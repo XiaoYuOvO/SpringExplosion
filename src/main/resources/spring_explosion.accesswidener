@@ -1,0 +1,8 @@
+accessWidener	v1	named
+accessible class net/minecraft/client/particle/FireworksSparkParticle$Explosion
+accessible method net/minecraft/item/map/MapState addIcon (Lnet/minecraft/item/map/MapIcon$Type;Lnet/minecraft/world/WorldAccess;Ljava/lang/String;DDDLnet/minecraft/text/Text;)V
+accessible method net/minecraft/item/map/MapState removeIcon (Ljava/lang/String;)V
+accessible field net/minecraft/item/map/MapState icons Ljava/util/Map;
+accessible field net/minecraft/client/particle/Particle velocityX D
+accessible field net/minecraft/client/particle/Particle velocityY D
+accessible field net/minecraft/client/particle/Particle velocityZ D

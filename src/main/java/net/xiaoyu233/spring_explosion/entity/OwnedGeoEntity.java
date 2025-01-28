@@ -53,6 +53,7 @@ public abstract class OwnedGeoEntity extends BaseGeoEntity implements Ownable {
 
     public void setOwner(@Nullable Entity owner) {
         this.owner = owner;
+        if (owner != null) this.ownerUuid = owner.getUuid();
     }
 
     public Packet<ClientPlayPacketListener> createSpawnPacket() {

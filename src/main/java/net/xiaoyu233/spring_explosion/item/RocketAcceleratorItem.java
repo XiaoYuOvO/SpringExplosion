@@ -1,5 +1,7 @@
 package net.xiaoyu233.spring_explosion.item;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.item.ArmorMaterials;
 import net.minecraft.item.Item;
 import net.xiaoyu233.spring_explosion.client.render.item.RocketAcceleratorArmorRenderer;
@@ -19,6 +21,7 @@ public class RocketAcceleratorItem extends WearableFireworkItem<RocketAccelerato
     }
 
     @Override
+    @Environment(EnvType.CLIENT)
     protected @NotNull GeoArmorRenderer<?> createArmorRenderer() {
         return new RocketAcceleratorArmorRenderer();
     }

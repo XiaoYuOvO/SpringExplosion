@@ -36,6 +36,11 @@ public class OilyBomb extends BaseFirework<OilyBombEntity, OilyBombItem, OilyBom
     }
 
     @Override
+    protected int getThrownUseCooldown() {
+        return 30;
+    }
+
+    @Override
     public int getFiringTime() {
         return 60;
     }

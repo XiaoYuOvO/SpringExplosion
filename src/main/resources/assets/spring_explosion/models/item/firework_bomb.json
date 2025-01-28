@@ -1,0 +1,83 @@
+{
+  "credit": "Made with Blockbench",
+  "parent": "builtin/entity",
+  "display": {
+    "thirdperson_righthand": {
+      "translation": [
+        0,
+        -1,
+        0
+      ]
+    },
+    "thirdperson_lefthand": {
+      "translation": [
+        0,
+        -1,
+        0
+      ]
+    },
+    "firstperson_righthand": {
+      "translation": [
+        0,
+        0,
+        0.5
+      ]
+    },
+    "firstperson_lefthand": {
+      "translation": [
+        0,
+        0,
+        0.5
+      ]
+    },
+    "ground": {
+      "translation": [
+        0,
+        -3.75,
+        0
+      ],
+      "scale": [
+        1.509765625,
+        1.509765625,
+        1.509765625
+      ]
+    },
+    "gui": {
+      "rotation": [
+        0,
+        -90,
+        0
+      ],
+      "translation": [
+        0,
+        -6.5,
+        0
+      ],
+      "scale": [
+        2.513671875,
+        2.513671875,
+        2.513671875
+      ]
+    },
+    "fixed": {
+      "rotation": [
+        0,
+        90,
+        0
+      ],
+      "translation": [
+        0,
+        -6.5,
+        0
+      ],
+      "scale": [
+        2.513671875,
+        2.513671875,
+        2.513671875
+      ]
+    }
+  },
+  "textures": {
+    "particle": "spring_explosion:item/firework_bomb"
+  }
+}

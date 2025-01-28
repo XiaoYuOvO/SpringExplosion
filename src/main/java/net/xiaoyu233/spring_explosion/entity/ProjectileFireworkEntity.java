@@ -16,11 +16,11 @@ import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraft.world.event.GameEvent;
 import net.xiaoyu233.spring_explosion.fireworks.BaseFirework;
+import net.xiaoyu233.spring_explosion.util.ParticleUtil;
 import net.xiaoyu233.spring_explosion.util.PredicateUtil;
 
 public abstract class ProjectileFireworkEntity<E extends BaseFireworkEntity<E,?>, F extends BaseFirework<E,?,?>> extends BaseFireworkEntity<E,F>{
@@ -72,6 +72,9 @@ public abstract class ProjectileFireworkEntity<E extends BaseFireworkEntity<E,?>
 
             h = 0.8F;
         } else {
+            if (this.getWorld().isClient && shouldShowTrail()) {
+                ParticleUtil.spawnConicalParticlesFromFacing(getWorld(), this.getRotationClient().negate(), this.getPos().add(0,getTrailOffset(),0), vec3d.negate().multiply(0.1f), 1, 2, 10);
+            }
             h = 0.99F;
         }
 
@@ -79,6 +82,14 @@ public abstract class ProjectileFireworkEntity<E extends BaseFireworkEntity<E,?>
         if (!shouldSelfMove()){
             this.setPosition(d, e, f);
         }
+    }
+
+    protected float getTrailOffset(){
+        return 0.5f;
+    }
+
+    protected boolean shouldShowTrail(){
+        return true;
     }
 
     protected void checkBlockCollision() {
@@ -120,7 +131,7 @@ public abstract class ProjectileFireworkEntity<E extends BaseFireworkEntity<E,?>
             return false;
         } else {
             Entity owner = this.getOwner();
-            return PredicateUtil.canHitEntityWithOwner(entity, owner) && (owner == null || !owner.isConnectedThroughVehicle(entity));
+            return PredicateUtil.canHitEntityWithOwner(owner, entity) && (owner == null || !owner.isConnectedThroughVehicle(entity));
         }
     }
 
@@ -138,18 +149,7 @@ public abstract class ProjectileFireworkEntity<E extends BaseFireworkEntity<E,?>
 
     }
 
-    public void setVelocityClient(double x, double y, double z) {
-        this.setVelocity(x, y, z);
-        if (this.prevPitch == 0.0F && this.prevYaw == 0.0F) {
-            double d = Math.sqrt(x * x + z * z);
-            this.setPitch((float)(MathHelper.atan2(y, d) * 57.2957763671875));
-            this.setYaw((float)(MathHelper.atan2(x, z) * 57.2957763671875));
-            this.prevPitch = this.getPitch();
-            this.prevYaw = this.getYaw();
-            this.refreshPositionAndAngles(this.getX(), this.getY(), this.getZ(), this.getYaw(), this.getPitch());
-        }
 
-    }
 
     protected void onEntityHit(EntityHitResult entityHitResult) {
     }

@@ -1,0 +1,97 @@
+{
+  "credit": "Made with Blockbench",
+  "parent": "builtin/entity",
+  "texture_size": [
+    64,
+    64
+  ],
+  "display": {
+    "thirdperson_righthand": {
+      "rotation": [
+        118.16,
+        -65.92,
+        111.91
+      ],
+      "translation": [
+        0.75,
+        -1.25,
+        -1
+      ]
+    },
+    "thirdperson_lefthand": {
+      "rotation": [
+        129.36,
+        64.17,
+        -121.01
+      ],
+      "translation": [
+        0,
+        -2,
+        -1
+      ]
+    },
+    "firstperson_righthand": {
+      "rotation": [
+        0,
+        -75,
+        0
+      ]
+    },
+    "firstperson_lefthand": {
+      "rotation": [
+        0,
+        105,
+        0
+      ]
+    },
+    "ground": {
+      "translation": [
+        0,
+        -5.5,
+        0
+      ],
+      "scale": [
+        1.578125,
+        1.578125,
+        1.578125
+      ]
+    },
+    "gui": {
+      "rotation": [
+        0,
+        9.5,
+        0
+      ],
+      "translation": [
+        0,
+        -7.5,
+        0
+      ],
+      "scale": [
+        3,
+        3,
+        3
+      ]
+    },
+    "fixed": {
+      "rotation": [
+        180,
+        0,
+        180
+      ],
+      "translation": [
+        0,
+        -9.25,
+        0
+      ],
+      "scale": [
+        3.7890625,
+        3.7890625,
+        3.7890625
+      ]
+    }
+  },
+  "textures": {
+    "particle": "spring_explosion:item/smoke_bomb"
+  }
+}

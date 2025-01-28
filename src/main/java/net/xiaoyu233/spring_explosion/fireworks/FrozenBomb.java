@@ -27,12 +27,17 @@ public class FrozenBomb extends BaseFirework<FrozenBombEntity, FrozenBombItem, F
 
     @Override
     public Supplier<FrozenBombItemRenderer> getRenderer() {
-        return null;
+        return FrozenBombItemRenderer::new;
     }
 
     @Override
     public int getFusingTime() {
         return 0;
+    }
+
+    @Override
+    protected int getThrownUseCooldown() {
+        return 20;
     }
 
     @Override

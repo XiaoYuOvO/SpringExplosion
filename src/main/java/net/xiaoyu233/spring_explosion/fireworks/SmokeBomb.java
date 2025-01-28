@@ -44,6 +44,11 @@ public class SmokeBomb extends BaseFirework<SmokeBombEntity, SmokeBombItem, Smok
     }
 
     @Override
+    protected int getThrownUseCooldown() {
+        return 60;
+    }
+
+    @Override
     public int getFiringTime() {
         return 100;
     }

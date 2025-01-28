@@ -8,7 +8,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
-import net.minecraft.world.explosion.EntityExplosionBehavior;
 import net.minecraft.world.explosion.Explosion;
 import net.xiaoyu233.spring_explosion.fireworks.FireworkMortar;
 import net.xiaoyu233.spring_explosion.util.FireworkUtil;
@@ -22,8 +21,13 @@ public class FireworkMortarEntity extends ProjectileFireworkEntity<FireworkMorta
     @Override
     protected void tickAcceleration() {
         if (isFiring()){
-            this.setVelocity(this.getVelocity().add(this.getRotationVec(0).multiply(0.2)));
+            this.setVelocity(this.getVelocity().add(this.getRotationVec(0).multiply(0.4)));
         }
+    }
+
+    @Override
+    protected float getTrailOffset() {
+        return 0.1f;
     }
 
     @Override
@@ -43,7 +47,7 @@ public class FireworkMortarEntity extends ProjectileFireworkEntity<FireworkMorta
     }
 
     private void explodeAndDiscard() {
-        this.getWorld().createExplosion(this, this.getWorld().getDamageSources().explosion(this, this.getOwner()), new EntityExplosionBehavior(this),this.getX(), this.getY(),this.getZ(), 2, false, World.ExplosionSourceType.MOB, false);
+        this.getWorld().createExplosion(this, this.getWorld().getDamageSources().explosion(this, this.getOwner()), new FireworkExplosionBehavior<>(this),this.getX(), this.getY(),this.getZ(), (float) (2 + this.getVelocity().lengthSquared() * 0.05f), false, World.ExplosionSourceType.MOB, false);
         this.getWorld().addFireworkParticle(this.getX(), this.getY() + 0.5, this.getZ(), 0,0,0, FireworkUtil.randomFirework(this.getWorld().random));
         this.discard();
     }

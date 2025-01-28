@@ -5,12 +5,18 @@
   "compatibilityLevel": "JAVA_17",
   "mixins": [
     "ExplosionMixin",
+    "FarmlandMixin",
+    "ItemCommandMixin",
     "ItemStackMixin",
     "LivingEntityMixin",
-    "PlayerEntityMixin"
+    "LootCommandMixin",
+    "PlayerEntityMixin",
+    "SnowBlockMixin",
+    "TeamCommandMixin"
   ],
   "client": [
     "client.HeldItemRendererMixin",
+    "client.OtherClientPlayerEntityMixin",
     "client.PlayerEntityRendererMixin"
   ],
   "injectors": {
