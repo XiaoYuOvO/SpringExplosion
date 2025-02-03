@@ -46,8 +46,8 @@ public class MineItem extends DefaultGeoItem<MineItem, MineItemRenderer> impleme
         MineEntity mineEntity = SEEntityTypes.FIREWORK_MINE.create(world);
         mineEntity.setOwner(user);
         mineEntity.setPrepareTime(PREPARE_TIME);
-        world.spawnEntity(mineEntity);
         FireworkItemToEntityAction.dropNoCopyRotation().apply(mineEntity, user);
+        world.spawnEntity(mineEntity);
         ItemStack controller = new ItemStack(SEItems.FIREWORK_MINE_CONTROLLER);
         MineControllerItemComponent mineControllerItemComponent = SEItemComponents.FIREWORK_MINE_CONTROLLER.get(controller);
         mineControllerItemComponent.setTarget(mineEntity);

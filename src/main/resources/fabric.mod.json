@@ -1,11 +1,11 @@
 {
   "schemaVersion": 1,
   "id": "spring_explosion",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "name": "SpringExplosion",
   "accessWidener" : "spring_explosion.accesswidener",
   "description": "",
-  "authors": [],
+  "authors": ["XiaoYu233", "Aqua_Bluesoul"],
   "contact": {
     "repo": "https://github.com/XiaoYuOvO/SpringExplosion"
   },

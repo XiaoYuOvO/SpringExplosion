@@ -1,6 +1,7 @@
 package net.xiaoyu233.spring_explosion.entity;
 
 import net.minecraft.block.BlockState;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.MovementType;
@@ -58,6 +59,12 @@ public class MineEntity extends OwnedGeoEntity implements IFireworkEntity{
 
     public void setPrepareTime(int time){
         this.dataTracker.set(PREPARE_TIME,time);
+    }
+
+    @Override
+    public boolean isGlowing() {
+        if (this.getWorld().isClient) return MinecraftClient.getInstance().player == this.getOwner();
+        return super.isGlowing();
     }
 
     public int getPrepareTime(){

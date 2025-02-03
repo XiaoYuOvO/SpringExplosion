@@ -128,18 +128,22 @@ public class ParticleUtil {
 //    }
 
     @Environment(EnvType.CLIENT)
-    public static void spawnDownwardParticles(World world, Vec3d startPos, Vec3d relativeSpeed, int count, float radius) {
+    public static void spawnDownwardParticles(World world, Vec3d startPos, Vec3d relativeSpeed, int count, float radius, Consumer<Particle> particleRenderer) {
         for (int i = 0; i < count; ++i) {
             Random random = world.random;
-            world.addParticle(ParticleTypes.FIREWORK,
+            particleRenderer.accept(MinecraftClient.getInstance().particleManager.addParticle(ParticleTypes.FIREWORK,
                     startPos.x,
                     startPos.y,
                     startPos.z,
                     random.nextGaussian() * radius * 0.01 + relativeSpeed.x,
                     -random.nextDouble() + relativeSpeed.y,
-                    random.nextGaussian() * radius * 0.01 + relativeSpeed.z);
+                    random.nextGaussian() * radius * 0.01 + relativeSpeed.z));
         }
 
+    }
+
+    public static void spawnDownwardParticles(World world, Vec3d startPos, Vec3d relativeSpeed, int count, float radius) {
+        spawnDownwardParticles(world, startPos, relativeSpeed, count, radius, (p)->{});
     }
 
     @Environment(EnvType.CLIENT)

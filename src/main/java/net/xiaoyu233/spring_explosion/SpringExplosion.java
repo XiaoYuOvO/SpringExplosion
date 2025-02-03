@@ -1,10 +1,8 @@
 package net.xiaoyu233.spring_explosion;
 
 import net.fabricmc.api.ModInitializer;
-import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerWorldEvents;
 import net.xiaoyu233.spring_explosion.client.sound.SESoundEvents;
-import net.xiaoyu233.spring_explosion.command.MapCommand;
 import net.xiaoyu233.spring_explosion.components.items.SEItemComponents;
 import net.xiaoyu233.spring_explosion.effect.SEEffects;
 import net.xiaoyu233.spring_explosion.entity.SEEntityTypes;
@@ -20,7 +18,6 @@ public class SpringExplosion implements ModInitializer {
         SESoundEvents.registerSounds();
         SEEffects.register();
         SEParticles.initialize();
-        CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> MapCommand.register(dispatcher));
 
         ServerWorldEvents.LOAD.register((server, world) -> {
             //Prevent for crash :)

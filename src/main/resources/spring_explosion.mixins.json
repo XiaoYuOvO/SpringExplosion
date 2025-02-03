@@ -6,13 +6,11 @@
   "mixins": [
     "ExplosionMixin",
     "FarmlandMixin",
-    "ItemCommandMixin",
     "ItemStackMixin",
     "LivingEntityMixin",
-    "LootCommandMixin",
     "PlayerEntityMixin",
-    "SnowBlockMixin",
-    "TeamCommandMixin"
+    "PlayerScreenSlotMixin",
+    "SnowBlockMixin"
   ],
   "client": [
     "client.HeldItemRendererMixin",

@@ -97,8 +97,8 @@ public abstract class BaseFireworkItem<F extends BaseFirework<?, I, IR>, I exten
     @Override
     public ItemEntity useOnDrop(World world, ItemStack stack, LivingEntity user) {
         BaseFireworkEntity<?, ?> fusingEntity = this.getFirework().createEntity(world, stack, user);
-        world.spawnEntity(fusingEntity);
         this.getFirework().getDropAction().apply(fusingEntity, user);
+        world.spawnEntity(fusingEntity);
         return null;
     }
 

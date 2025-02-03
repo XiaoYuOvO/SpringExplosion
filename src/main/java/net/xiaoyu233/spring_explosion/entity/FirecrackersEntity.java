@@ -1,6 +1,7 @@
 package net.xiaoyu233.spring_explosion.entity;
 
 import net.minecraft.block.BlockState;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.MovementType;
@@ -68,6 +69,12 @@ public class FirecrackersEntity extends OwnedGeoEntity implements IFireworkEntit
             }
         }
         return this.lastFirecracker;
+    }
+
+    @Override
+    public boolean isGlowing() {
+        if (this.getWorld().isClient) return MinecraftClient.getInstance().player == this.getOwner();
+        return super.isGlowing();
     }
 
     @Nullable

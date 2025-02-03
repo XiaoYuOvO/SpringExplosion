@@ -61,7 +61,7 @@ public class FirecrackersItem extends DefaultGeoItem<FirecrackersItem, Firecrack
         FirecrackerItemComponent firecrackerItemComponent = SEItemComponents.FIRECRACKER.get(stackInHand);
         if (!firecrackerItemComponent.isDeploying()){
             FirecrackersEntity newFirecracker = SEEntityTypes.FIRECRACKERS.create(world);
-            newFirecracker.updatePositionAndAngles(user.getX(), user.getY(), user.getZ(), 0f, 0f);
+            newFirecracker.refreshPositionAndAngles(user.getX(), user.getY(), user.getZ(), 0f, 0f);
             newFirecracker.lookAt(EntityAnchorArgumentType.EntityAnchor.FEET, user.getPos());
             newFirecracker.setOwner(user);
             firecrackerItemComponent.setLastFirecracker(newFirecracker);
@@ -88,7 +88,7 @@ public class FirecrackersItem extends DefaultGeoItem<FirecrackersItem, Firecrack
                 firecrackerItemComponent.getLastFirecracker(((ServerWorld) world)).ifPresent((firecracker) -> {
                     if (entity.squaredDistanceTo(firecracker) > 0.75d){
                         FirecrackersEntity newFirecracker = SEEntityTypes.FIRECRACKERS.create(world);
-                        newFirecracker.updatePositionAndAngles(entity.getX(), entity.getY() + 0.5d, entity.getZ(), 0f, 0f);
+                        newFirecracker.refreshPositionAndAngles(entity.getX(), entity.getY() + 0.5d, entity.getZ(), 0f, 0f);
                         newFirecracker.lookAt(EntityAnchorArgumentType.EntityAnchor.FEET, firecracker.getPos());
                         newFirecracker.setLastFirecracker(firecracker);
                         newFirecracker.setOwner(entity);

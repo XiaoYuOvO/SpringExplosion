@@ -48,7 +48,7 @@ public class FireworkMissileEntity extends BaseFireworkEntity<FireworkMissileEnt
                 bulletEntity.setOwner(this.getOwner());
                 bulletEntity.setDurationRemain(200);
                 this.findTarget().ifPresent(bulletEntity::setTarget);
-                bulletEntity.updatePositionAndAngles(this.getX(), this.getY() + 0.5d, this.getZ(), 0, -90);
+                bulletEntity.refreshPositionAndAngles(this.getX(), this.getY() + 0.5d, this.getZ(), 0, -90);
                 this.getWorld().spawnEntity(bulletEntity);
                 this.playSound(SoundEvents.ENTITY_FIREWORK_ROCKET_LAUNCH, 1.0F, (float) (1 + 0.1 * random.nextGaussian()));
             }

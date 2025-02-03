@@ -2,6 +2,7 @@ package net.xiaoyu233.spring_explosion.fireworks;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.particle.Particle;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
@@ -20,7 +21,9 @@ import net.xiaoyu233.spring_explosion.util.EntityUtil;
 import net.xiaoyu233.spring_explosion.util.ItemUtil;
 import net.xiaoyu233.spring_explosion.util.ParticleUtil;
 import org.jetbrains.annotations.NotNull;
+import org.joml.Vector3f;
 
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 public class FireworkJetpack extends BaseFirework<FireworkJetpackEntity, FireworkJetpackItem, FireworkJetpackItemRenderer>{
@@ -39,10 +42,10 @@ public class FireworkJetpack extends BaseFirework<FireworkJetpackEntity, Firewor
         }
         if (itemStack.getDamage() ==  100 || itemStack.getDamage() == 1){
             if (world.isClient){
-                spawnParticle(user,20, new Vec3d(0,1,0));
+                spawnParticle(user,20, new Vec3d(0,-1,0), true);
             }else {
                 if (itemStack.getDamage() == 1){
-                    user.setNoGravity(itemStack.getDamage() != 100);
+                    user.setNoGravity(true);
                     user.addStatusEffect(new StatusEffectInstance(StatusEffects.LEVITATION, 7, 10));
                 }else {
                     user.setNoGravity(false);
@@ -51,22 +54,32 @@ public class FireworkJetpack extends BaseFirework<FireworkJetpackEntity, Firewor
 
             }
 
-            user.addStatusEffect(new StatusEffectInstance(StatusEffects.SLOW_FALLING, 160 ,0));
             user.playSound(SoundEvents.ENTITY_FIREWORK_ROCKET_LAUNCH,1,1);
         }
+        user.addStatusEffect(new StatusEffectInstance(StatusEffects.SLOW_FALLING, 20 ,0));
         if (world.isClient) {
-            spawnParticle(user, 2, new Vec3d(0, -0.1, 0));
+            spawnParticle(user, 2, new Vec3d(0, -0.5, 0), false);
         }
         ItemUtil.damageItem(itemStack, 1, user);
     }
 
-    private static void spawnParticle(Entity entity, int count, Vec3d relVec) {
+    private static void spawnParticle(Entity entity, int count, Vec3d relVec, boolean color) {
         World world = entity.getWorld();
         Vec3d rotationVector = EntityUtil.getRotationVector(0, entity.getBodyYaw());
         Vec3d left = rotationVector.rotateY(90).multiply(0.3);
         Vec3d right = rotationVector.rotateY(-90).multiply(0.3);
-        ParticleUtil.spawnDownwardParticles(world, entity.getPos().add(left.x, 0.7, left.z),relVec, count,20);
-        ParticleUtil.spawnDownwardParticles(world,  entity.getPos().add(right.x, 0.7, right.z),relVec, count,20);
+        if (color){
+            Consumer<Particle> renderer = particle -> {
+                Vector3f vector3f = ParticleUtil.HSBtoRGB(world.random.nextFloat() * 0.1666f, 1,1);
+                particle.setColor(vector3f.x, vector3f.y, vector3f.z);
+                particle.setMaxAge(60);
+            };
+            ParticleUtil.spawnDownwardParticles(world, entity.getPos().add(left.x, 0.7, left.z),relVec, count,60, renderer);
+            ParticleUtil.spawnDownwardParticles(world,  entity.getPos().add(right.x, 0.7, right.z),relVec, count,60, renderer);
+        }else {
+            ParticleUtil.spawnDownwardParticles(world, entity.getPos().add(left.x, 0.7, left.z),relVec, count,20, (p) -> p.setMaxAge(20));
+            ParticleUtil.spawnDownwardParticles(world,  entity.getPos().add(right.x, 0.7, right.z),relVec, count,20, (p) -> p.setMaxAge(20));
+        }
     }
 
     @Override

@@ -29,9 +29,8 @@ public class FireworkMachineGun extends BaseFirework<FireworkMachineGunEntity, F
             if (!world.isClient) {
                 FireworkBulletEntity fireworkBulletEntity = SEEntityTypes.FIREWORK_BULLET.create(world);
                 fireworkBulletEntity.setOwner(entity.getOwner());
-                fireworkBulletEntity.updatePositionAndAngles(entity.getX(), entity.getEyeY(), entity.getZ(), entity.getYaw(), entity.getPitch());
+                fireworkBulletEntity.refreshPositionAndAngles(entity.getX(), entity.getEyeY(), entity.getZ(), entity.getYaw(), entity.getPitch());
                 world.spawnEntity(fireworkBulletEntity);
-                fireworkBulletEntity.updatePositionAndAngles(entity.getX(), entity.getEyeY(), entity.getZ(), entity.getYaw(), entity.getPitch());
             }
             entity.playSound(SESoundEvents.FIREWORK_MACHINE_GUN_FIRE, 1, 0.9f + world.random.nextFloat() * 0.2f);
         }
@@ -44,9 +43,8 @@ public class FireworkMachineGun extends BaseFirework<FireworkMachineGunEntity, F
                 FireworkBulletEntity fireworkBulletEntity = SEEntityTypes.FIREWORK_BULLET.create(world);
                 fireworkBulletEntity.setOwner(user);
 //                fireworkBulletEntity.setVelocity(user, user.getPitch(), user.getYaw(), 0, 0.3f, 0);
-                fireworkBulletEntity.updatePositionAndAngles(user.getX(), user.getEyeY() - 0.3d, user.getZ(), user.getYaw(), user.getPitch());
+                fireworkBulletEntity.refreshPositionAndAngles(user.getX(), user.getEyeY() - 0.3d, user.getZ(), user.getYaw(), user.getPitch());
                 world.spawnEntity(fireworkBulletEntity);
-                fireworkBulletEntity.updatePositionAndAngles(user.getX(), user.getEyeY() - 0.3d, user.getZ(), user.getYaw(), user.getPitch());
             }
             user.playSound(SESoundEvents.FIREWORK_MACHINE_GUN_FIRE, 1, 0.9f + world.random.nextFloat() * 0.2f);
             user.setVelocity(user.getVelocity().multiply(0.1));
