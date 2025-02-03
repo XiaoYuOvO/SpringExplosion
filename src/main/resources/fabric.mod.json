@@ -9,7 +9,7 @@
   "contact": {
     "repo": "https://github.com/XiaoYuOvO/SpringExplosion"
   },
-  "license": "All-Rights-Reserved",
+  "license": "GPLv3",
   "icon": "assets/spring_explosion/icon.png",
   "environment": "*",
   "entrypoints": {
